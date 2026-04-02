@@ -12,7 +12,7 @@
 <p align="center">
   <a href="#why">Why</a> ·
   <a href="#highlights">Highlights</a> ·
-  <a href="#case-study">案例展示</a> ·
+  <a href="#showcase">案例对照</a> ·
   <a href="#quick-start">Quick Start</a> ·
   <a href="#usage">Usage</a> ·
   <a href="#configuration">Configuration</a> ·
@@ -59,9 +59,9 @@ Requirement
   -> Editable PPTX
 ```
 
-<a id="case-study"></a>
+<a id="showcase"></a>
 
-## 案例展示
+## 案例对照
 
 参考 PPTAgent 的 case study 展示方式，这里把每个案例都拆成左右两栏：左侧是纯图结果，右侧是基于同一份内容重建出的完全可编辑版本。
 
@@ -77,8 +77,8 @@ Requirement
     <th width="50%">完全可编辑版本</th>
   </tr>
   <tr>
-    <td><img src="./case-study/contact-sheets/demo1.png" alt="案例 1 纯图版本" /></td>
-    <td><img src="./case-study/contact-sheets/demo1_buke.png" alt="案例 1 完全可编辑版本" /></td>
+    <td><img src="./case-study/contact-sheets/demo1_buke.png" alt="案例 1 纯图版本" /></td>
+    <td><img src="./case-study/contact-sheets/demo1.png" alt="案例 1 完全可编辑版本" /></td>
   </tr>
 </table>
 
@@ -98,8 +98,8 @@ Requirement
     <th width="50%">完全可编辑版本</th>
   </tr>
   <tr>
-    <td><img src="./case-study/contact-sheets/demo2.png" alt="案例 2 纯图版本" /></td>
-    <td><img src="./case-study/contact-sheets/demo2_buke.png" alt="案例 2 完全可编辑版本" /></td>
+    <td><img src="./case-study/contact-sheets/demo2_buke.png" alt="案例 2 纯图版本" /></td>
+    <td><img src="./case-study/contact-sheets/demo2.png" alt="案例 2 完全可编辑版本" /></td>
   </tr>
 </table>
 
@@ -119,8 +119,8 @@ Requirement
     <th width="50%">完全可编辑版本</th>
   </tr>
   <tr>
-    <td><img src="./case-study/contact-sheets/demo3.png" alt="案例 3 纯图版本" /></td>
-    <td><img src="./case-study/contact-sheets/demo3_buke.png" alt="案例 3 完全可编辑版本" /></td>
+    <td><img src="./case-study/contact-sheets/demo3_buke.png" alt="案例 3 纯图版本" /></td>
+    <td><img src="./case-study/contact-sheets/demo3.png" alt="案例 3 完全可编辑版本" /></td>
   </tr>
 </table>
 
@@ -351,3 +351,13 @@ generated/<run_id>/
 ### 只想复用已有素材
 
 可以使用 `--assets-json`，但当前更适合单图片模式下直接指定已有 `assets.json`。
+
+## 希望与大家交流
+
+欢迎对可编辑 PPT 生成、文档智能解析与实际部署流程感兴趣的研究者、开发者和同学与我们交流。
+
+如果你希望进一步交流技术思路、效果评测、实现细节，或分享相关研究与工程实践经验，欢迎添加微信联系。我们也很期待与更多同行围绕真实问题展开学习讨论、相互启发。
+
+<p align="center">
+  <img src="./case-study/wechat.jpg" alt="微信二维码" width="320" />
+</p>
