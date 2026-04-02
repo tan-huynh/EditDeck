@@ -1,0 +1,292 @@
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #0d1a2d;
+  --muted: #56657b;
+  --line: #dbe4f0;
+  --brand: #1268dc;
+  --brand-2: #0e4fa8;
+  --accent: #0d8b62;
+  --err: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: radial-gradient(circle at 20% 0%, #ffffff 0%, var(--bg) 55%);
+  color: var(--text);
+}
+
+.page {
+  max-width: 1100px;
+  margin: 32px auto 48px;
+  padding: 0 16px;
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+}
+
+.hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 18px;
+  box-shadow: 0 8px 26px rgba(13, 26, 45, 0.06);
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+textarea,
+input,
+select {
+  width: 100%;
+  margin-top: 7px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 26px;
+}
+
+.checkbox input {
+  width: auto;
+  margin: 0;
+}
+
+.editable-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.backend-fieldset {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.backend-fieldset legend {
+  padding: 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.radio-option:last-of-type {
+  margin-bottom: 0;
+}
+
+.radio-option input {
+  width: auto;
+  margin: 0;
+}
+
+.field-hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+details {
+  margin: 14px 0;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+button,
+.download-btn {
+  display: inline-block;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button.secondary {
+  background: #eef3fb;
+  color: var(--brand-2);
+  border: 1px solid var(--line);
+}
+
+.download-btn.accent {
+  background: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none;
+}
+
+#status {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+#status.error {
+  color: var(--err);
+}
+
+.progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-track {
+  margin-top: 10px;
+  width: 100%;
+  height: 12px;
+  background: #eaf0f8;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #1268dc 0%, #52a8ff 100%);
+  transition: width 0.35s ease;
+}
+
+.progress-detail {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.progress-slide {
+  margin: 6px 0 0;
+  font-weight: 700;
+}
+
+.inline-meta {
+  margin-left: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.style-prompt-label {
+  margin: 10px 0 6px;
+  font-weight: 700;
+}
+
+pre {
+  background: #f7faff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+#outline-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+#outline-list li {
+  margin-bottom: 12px;
+}
+
+.slides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.slide-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.slide-card img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #eef3fa;
+}
+
+.slide-card .meta {
+  padding: 10px;
+}
+
+.slide-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.slide-card details {
+  margin: 0;
+}
+
+.slide-card summary {
+  font-size: 13px;
+  color: var(--brand-2);
+}
+
+@media (max-width: 760px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .checkbox {
+    padding-top: 0;
+  }
+}

@@ -1,0 +1,10 @@
+fastapi>=0.116.0
+uvicorn[standard]>=0.30.0
+openai>=1.51.0
+python-multipart>=0.0.9
+pydantic-settings>=2.6.0
+requests>=2.32.0
+python-pptx>=1.0.2
+typing-extensions>=4.12.2
+Pillow>=10.0.0
+PyYAML>=6.0.2

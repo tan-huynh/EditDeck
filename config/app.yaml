@@ -1,0 +1,47 @@
+app:
+  output_root: generated
+  default_slide_count: 6
+
+models:
+  text:
+    provider: openai
+    base_url: https://yunwu.ai/v1
+    api_key: ""
+    model: gpt-5.2-chat-latest
+
+  editable:
+    provider: openai
+    base_url: https://grsaiapi.com/v1
+    api_key: ""
+    model: gemini-3.1-pro
+    prompt_file: ""
+    browser_path: ""
+    download_timeout_ms: 180000
+    max_tokens: 1000000
+    max_attempts: 3
+    sleep_seconds: 1.0
+    asset_backend: edit
+    disable_asset_reuse: false
+
+  image:
+    provider: http
+    base_url: https://grsai.dakka.com.cn/v1/draw/nano-banana
+    api_key: ""
+    model: nano-banana-pro
+    size: 4K
+    variants: 1
+    timeout: 900
+    retries: 2
+    max_workers: 20
+
+mineru:
+  base_url: https://mineru.net/api/v4
+  api_key: ""
+  model_version: vlm
+  language: ch
+  enable_formula: true
+  enable_table: true
+  is_ocr: true
+  poll_interval_seconds: 2.0
+  timeout_seconds: 300
+  max_refine_depth: 2

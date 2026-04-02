@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PPT 图片与可编辑 PPT 工作台</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>PPT 图片与可编辑 PPT 工作台</h1>
+        <p>先生成整套页面图片和普通 PPT，再按需继续转换为可编辑 PPT。</p>
+      </header>
+
+      <section class="card">
+        <form id="generate-form">
+          <label>
+            你的 PPT 需求
+            <textarea
+              name="user_requirement"
+              rows="4"
+              placeholder="例如：做一份《AI 办公效率提升方案》，面向企业管理层汇报，强调现状痛点、解决方案、实施路径与预期收益"
+              required
+            ></textarea>
+          </label>
+
+          <div class="row">
+            <label>
+              页数
+              <input name="slide_count" type="text" value="auto" placeholder="auto 或 8" />
+            </label>
+            <label>
+              信息密度
+              <select name="information_density">
+                <option value="auto">auto: 不额外限制</option>
+                <option value="low">low: 1-3 个要点</option>
+                <option value="medium" selected>medium: 3-5 个要点</option>
+                <option value="high">high: 5-7 个要点</option>
+                <option value="extra">extra: 7-10 个要点</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              输出模式
+              <select name="export_mode">
+                <option value="both" selected>图片 + 普通 PPT</option>
+                <option value="images">仅图片</option>
+                <option value="ppt">仅普通 PPT</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="row">
+            <label>
+              风格模板图
+              <input name="style_template" type="file" accept="image/*" />
+            </label>
+            <div class="editable-controls">
+              <label class="checkbox">
+                <input name="generate_editable_ppt" type="checkbox" value="true" />
+                <span>生成完成后继续转换为可编辑 PPT</span>
+              </label>
+              <fieldset class="backend-fieldset">
+                <legend>可编辑素材后端</legend>
+                <input name="asset_backend" type="hidden" value="edit" />
+                <p class="field-hint">
+                  当前固定使用 `edit` 后端，通过 MinerU 解析页面元素并匹配 PH 占位符。
+                </p>
+              </fieldset>
+            </div>
+          </div>
+
+          <label>
+            风格描述
+            <textarea
+              name="style_description"
+              rows="3"
+              placeholder="例如：简洁商务风，白底与浅灰底为主，黑灰文字，少量蓝色点缀，图表克制、结构清晰"
+            ></textarea>
+          </label>
+
+          <details>
+            <summary>基础模型配置（覆盖配置文件）</summary>
+            <div class="row">
+              <label>
+                Base URL
+                <input name="base_url" type="text" placeholder="https://yunwu.ai/v1" />
+              </label>
+              <label>
+                图片接口 URL
+                <input
+                  name="image_api_url"
+                  type="text"
+                  placeholder="https://grsai.dakka.com.cn/v1/draw/completions"
+                />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                文本模型
+                <input name="text_model" type="text" placeholder="gpt-5.2-chat-latest" />
+              </label>
+              <label>
+                图片模型
+                <input name="image_model" type="text" placeholder="nano-banana-pro" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                文本 API Key
+                <input name="text_api_key" type="password" placeholder="留空则使用配置文件中的值" />
+              </label>
+              <label>
+                图片 API Key
+                <input name="image_api_key" type="password" placeholder="留空则使用配置文件中的值" />
+              </label>
+            </div>
+          </details>
+
+          <details>
+            <summary>可编辑 PPT 通用配置</summary>
+            <div class="row">
+              <label>
+                Editable Base URL
+                <input name="editable_base_url" type="text" placeholder="留空则复用文本模型 Base URL" />
+              </label>
+              <label>
+                Editable API Key
+                <input name="editable_api_key" type="password" placeholder="留空则复用文本模型配置" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                Editable 模型
+                <input name="editable_model" type="text" placeholder="留空则使用配置文件中的模型" />
+              </label>
+              <label>
+                浏览器路径
+                <input
+                  name="editable_browser_path"
+                  type="text"
+                  placeholder="留空则自动探测浏览器或使用 Playwright 内置 Chromium"
+                />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                Editable 最大尝试次数
+                <input name="editable_max_attempts" type="number" min="1" placeholder="3" />
+              </label>
+              <label>
+                素材输出目录
+                <input name="assets_dir" type="text" placeholder="可选，留空则使用默认目录" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                Editable 最大 Token
+                <input name="editable_max_tokens" type="number" min="1" placeholder="1000000" />
+              </label>
+              <label>
+                Editable 下载超时（毫秒）
+                <input name="editable_download_timeout_ms" type="number" min="1000" placeholder="180000" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                Editable 重试间隔（秒）
+                <input name="editable_sleep_seconds" type="number" min="0" step="0.1" placeholder="1.0" />
+              </label>
+              <label>
+                Editable Prompt 文件
+                <input name="editable_prompt_file" type="text" placeholder="可选，自定义 prompt 文件路径" />
+              </label>
+            </div>
+            <div class="row">
+              <label class="checkbox">
+                <input name="force_reextract_assets" type="checkbox" value="true" />
+                <span>强制重新提取素材</span>
+              </label>
+              <label class="checkbox">
+                <input name="disable_asset_reuse" type="checkbox" value="true" />
+                <span>禁止同一素材复用到多个 PH</span>
+              </label>
+            </div>
+          </details>
+
+          <details>
+            <summary>Edit 后端配置</summary>
+            <div class="row">
+              <label>
+                MinerU Base URL
+                <input name="mineru_base_url" type="text" placeholder="https://mineru.net/api/v4" />
+              </label>
+              <label>
+                MinerU API Key
+                <input name="mineru_api_key" type="password" placeholder="留空则使用配置文件中的值" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                MinerU 模型版本
+                <input name="mineru_model_version" type="text" placeholder="vlm" />
+              </label>
+              <label>
+                MinerU 语言
+                <input name="mineru_language" type="text" placeholder="ch" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                轮询间隔（秒）
+                <input name="mineru_poll_interval_seconds" type="number" min="0.5" step="0.5" placeholder="2.0" />
+              </label>
+              <label>
+                超时时间（秒）
+                <input name="mineru_timeout_seconds" type="number" min="30" placeholder="300" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                递归细化深度
+                <input name="mineru_max_refine_depth" type="number" min="0" placeholder="2" />
+              </label>
+              <div></div>
+            </div>
+            <div class="row">
+              <label>
+                公式识别
+                <select name="mineru_enable_formula">
+                  <option value="">跟随配置文件</option>
+                  <option value="true" selected>启用</option>
+                  <option value="false">禁用</option>
+                </select>
+              </label>
+              <label>
+                表格识别
+                <select name="mineru_enable_table">
+                  <option value="">跟随配置文件</option>
+                  <option value="true" selected>启用</option>
+                  <option value="false">禁用</option>
+                </select>
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                OCR
+                <select name="mineru_is_ocr">
+                  <option value="">跟随配置文件</option>
+                  <option value="true" selected>启用</option>
+                  <option value="false">禁用</option>
+                </select>
+              </label>
+              <div></div>
+            </div>
+          </details>
+
+          <button id="submit-btn" type="submit">开始生成</button>
+        </form>
+      </section>
+
+      <section id="progress-card" class="card hidden">
+        <div class="progress-head">
+          <strong id="progress-step">准备中...</strong>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="progress-detail" class="progress-detail">等待开始...</p>
+        <p id="progress-slide" class="progress-slide hidden"></p>
+      </section>
+
+      <section id="status" class="card hidden"></section>
+
+      <section id="result" class="hidden">
+        <div class="card">
+          <h2>生成结果</h2>
+          <p id="deck-title"></p>
+          <p id="pptx-wrap" class="hidden">
+            <a id="pptx-link" class="download-btn" target="_blank" rel="noopener">下载普通 PPT</a>
+          </p>
+          <p id="editable-wrap" class="hidden">
+            <a id="editable-link" class="download-btn accent" target="_blank" rel="noopener">下载可编辑 PPT</a>
+            <span id="editable-meta" class="inline-meta"></span>
+          </p>
+          <p>
+            <button id="convert-editable-btn" class="secondary hidden" type="button">基于当前结果单独生成可编辑 PPT</button>
+          </p>
+          <p class="style-prompt-label">风格 Prompt</p>
+          <pre id="style-prompt"></pre>
+        </div>
+
+        <div class="card">
+          <h2>大纲</h2>
+          <ol id="outline-list"></ol>
+        </div>
+
+        <div class="card">
+          <h2>页面图片</h2>
+          <div id="slides-grid" class="slides-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

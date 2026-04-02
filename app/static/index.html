@@ -1,0 +1,131 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>一键生成 PPT 图片 Demo</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <h1>一键生成 PPT 图片</h1>
+        <p>
+          支持自动页数、风格描述扩写、风格模板图解析，并实时显示生成进度。
+        </p>
+      </header>
+
+      <section class="card">
+        <form id="generate-form">
+          <label>
+            你的 PPT 需求
+            <textarea
+              name="user_requirement"
+              rows="4"
+              placeholder="例如：做一份《宠物医院年度运营复盘》，面向投资人汇报，强调增长路径与未来计划"
+              required
+            ></textarea>
+          </label>
+
+          <div class="row">
+            <label>
+              页数（输入 auto 或留空表示自动）
+              <input name="slide_count" type="text" value="auto" placeholder="auto 或 8" />
+            </label>
+            <label>
+              风格模板图（可选）
+              <input name="style_template" type="file" accept="image/*" />
+            </label>
+          </div>
+
+          <label>
+            风格描述（可选，与风格模板图互斥）
+            <textarea
+              name="style_description"
+              rows="3"
+              placeholder="例如：极简科技风，蓝灰主色，高级留白，数据可视化风格统一，标题强对比"
+            ></textarea>
+          </label>
+
+          <details>
+            <summary>高级配置（覆盖 .env）</summary>
+            <div class="row">
+              <label>
+                Base URL
+                <input name="base_url" type="text" placeholder="https://yunwu.ai/v1" />
+              </label>
+              <label>
+                图片接口 URL
+                <input
+                  name="image_api_url"
+                  type="text"
+                  placeholder="https://grsai.dakka.com.cn/v1/draw/completions"
+                />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                文本模型
+                <input name="text_model" type="text" placeholder="gpt-5.2-chat-latest" />
+              </label>
+              <label>
+                图片模型
+                <input name="image_model" type="text" placeholder="gemini-3-pro-image-preview" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                文本 API Key
+                <input name="text_api_key" type="password" placeholder="留空则使用配置文件中的值" />
+              </label>
+              <label>
+                图片 API Key（可不填，默认复用文本 Key）
+                <input name="image_api_key" type="password" placeholder="留空则使用配置文件中的值" />
+              </label>
+            </div>
+          </details>
+
+          <button id="submit-btn" type="submit">开始生成</button>
+        </form>
+      </section>
+
+      <section id="progress-card" class="card hidden">
+        <div class="progress-head">
+          <strong id="progress-step">准备中...</strong>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="progress-detail" class="progress-detail">等待开始...</p>
+        <p id="progress-slide" class="progress-slide hidden"></p>
+      </section>
+
+      <section id="status" class="card hidden"></section>
+
+      <section id="result" class="hidden">
+        <div class="card">
+          <h2>生成结果</h2>
+          <p id="deck-title"></p>
+          <p id="pptx-wrap" class="hidden">
+            <a id="pptx-link" class="download-btn" target="_blank" rel="noopener">一键下载 PPT</a>
+          </p>
+          <p class="style-prompt-label">风格 Prompt</p>
+          <pre id="style-prompt"></pre>
+        </div>
+
+        <div class="card">
+          <h2>大纲</h2>
+          <ol id="outline-list"></ol>
+        </div>
+
+        <div class="card">
+          <h2>页面图片</h2>
+          <div id="slides-grid" class="slides-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
