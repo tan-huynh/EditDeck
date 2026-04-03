@@ -12,7 +12,7 @@
 <p align="center">
   <a href="#why">Why</a> ·
   <a href="#highlights">Highlights</a> ·
-  <a href="#case-study">Case Study</a> ·
+  <a href="#showcase">Showcase</a> ·
   <a href="#quick-start">Quick Start</a> ·
   <a href="#usage">Usage</a> ·
   <a href="#configuration">Configuration</a> ·
@@ -60,9 +60,9 @@ Requirement
   -> Editable PPTX
 ```
 
-<a id="case-study"></a>
+<a id="showcase"></a>
 
-## Case Study
+## Showcase
 
 Following the side-by-side comparison style used by PPTAgent, each case is shown in two columns: the left side is the image-only result, and the right side is the fully editable reconstruction.
 
@@ -78,8 +78,8 @@ Following the side-by-side comparison style used by PPTAgent, each case is shown
     <th width="50%">Fully Editable Deck</th>
   </tr>
   <tr>
-    <td><img src="./case-study/contact-sheets/demo1.png" alt="Case 1 image-only deck" /></td>
-    <td><img src="./case-study/contact-sheets/demo1_buke.png" alt="Case 1 fully editable deck" /></td>
+    <td><img src="./case-study/contact-sheets/demo1_buke.png" alt="Case 1 image-only deck" /></td>
+    <td><img src="./case-study/contact-sheets/demo1.png" alt="Case 1 fully editable deck" /></td>
   </tr>
 </table>
 
@@ -99,8 +99,8 @@ Following the side-by-side comparison style used by PPTAgent, each case is shown
     <th width="50%">Fully Editable Deck</th>
   </tr>
   <tr>
-    <td><img src="./case-study/contact-sheets/demo2.png" alt="Case 2 image-only deck" /></td>
-    <td><img src="./case-study/contact-sheets/demo2_buke.png" alt="Case 2 fully editable deck" /></td>
+    <td><img src="./case-study/contact-sheets/demo2_buke.png" alt="Case 2 image-only deck" /></td>
+    <td><img src="./case-study/contact-sheets/demo2.png" alt="Case 2 fully editable deck" /></td>
   </tr>
 </table>
 
@@ -120,8 +120,8 @@ Following the side-by-side comparison style used by PPTAgent, each case is shown
     <th width="50%">Fully Editable Deck</th>
   </tr>
   <tr>
-    <td><img src="./case-study/contact-sheets/demo3.png" alt="Case 3 image-only deck" /></td>
-    <td><img src="./case-study/contact-sheets/demo3_buke.png" alt="Case 3 fully editable deck" /></td>
+    <td><img src="./case-study/contact-sheets/demo3_buke.png" alt="Case 3 image-only deck" /></td>
+    <td><img src="./case-study/contact-sheets/demo3.png" alt="Case 3 fully editable deck" /></td>
   </tr>
 </table>
 
@@ -352,3 +352,13 @@ Try:
 ### Just want to reuse existing assets
 
 Use `--assets-json`, though this is currently best suited for directly specifying an existing `assets.json` in single-image mode.
+
+## Let's Connect
+
+We welcome conversations with researchers, developers, and students who are interested in editable presentation generation, document intelligence, and practical deployment workflows.
+
+If you would like to discuss technical ideas, benchmarking results, implementation details, or related research and engineering experience, feel free to reach out. We would be glad to exchange thoughts and learn from one another.
+
+<p align="center">
+  <img src="./case-study/wechat.jpg" alt="WeChat QR code" width="320" />
+</p>
