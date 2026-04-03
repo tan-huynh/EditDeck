@@ -56,7 +56,11 @@
             <label>
               风格模板图
               <input name="style_template" type="file" accept="image/*" />
+              <span class="field-hint">
+                直接上传本地图片即可。提交时会自动转成 base64，并把同一张图传给模型作为风格参考。
+              </span>
             </label>
+            <input name="style_template_base64" type="hidden" />
             <label>
               婧愭枃浠?
               <input name="source_files" type="file" accept=".txt,.md,.pdf,.docx" multiple />

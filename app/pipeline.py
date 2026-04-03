@@ -3,6 +3,7 @@ import concurrent.futures
 import binascii
 import hashlib
 import json
+import mimetypes
 import os
 import re
 import traceback
@@ -56,6 +57,28 @@ STYLE_PROMPT_PARAMETER_RE = re.compile(
 )
 ASSISTANT_META_LINE_RE = re.compile(
     r"(?i)(?:^|\s)(如果你愿意|如果需要|我可以在下一步|我可以继续|是否需要我|接下来我可以|如需我可继续)"
+)
+STYLE_MASTER_LOCK_KEYWORDS = (
+    "背景",
+    "底色",
+    "配色",
+    "色彩",
+    "标题",
+    "文字系统",
+    "卡片",
+    "容器",
+    "边框",
+    "分隔",
+    "连接线",
+    "图标",
+    "图解",
+    "图表",
+    "标签",
+    "页脚",
+    "页码",
+    "阴影",
+    "材质",
+    "质感",
 )
 DEFAULT_INFORMATION_DENSITY = "medium"
 AUTO_INFORMATION_DENSITY = "auto"
@@ -238,6 +261,7 @@ class PPTImagePipeline:
         style_description: Optional[str],
         style_template_bytes: Optional[bytes],
         style_template_mime: Optional[str],
+        style_template_url: Optional[str],
         runtime_cfg: RuntimeConfig,
         export_mode: str = "both",
         information_density: str = DEFAULT_INFORMATION_DENSITY,
@@ -245,12 +269,13 @@ class PPTImagePipeline:
     ) -> GenerateResponse:
         requirement = (user_requirement or "").strip()
         style_desc = (style_description or "").strip()
+        style_template_url = (style_template_url or "").strip() or None
         normalized_export_mode = (export_mode or "both").strip().lower()
         normalized_information_density = self._normalize_information_density(information_density)
 
         if not requirement:
             raise ValueError("user_requirement cannot be empty.")
-        if style_desc and style_template_bytes:
+        if style_desc and (style_template_bytes or style_template_url):
             raise ValueError("风格描述与风格模板图互斥，请二选一。")
         if normalized_export_mode not in {"images", "ppt", "both"}:
             raise ValueError("export_mode must be one of: images, ppt, both.")
@@ -265,6 +290,7 @@ class PPTImagePipeline:
             "description_present": bool(style_desc),
             "template_present": bool(style_template_bytes),
             "template_mime": style_template_mime or "",
+            **self._style_reference_log_meta(style_template_url),
         }
         if style_desc:
             style_input_meta["type"] = "description"
@@ -355,9 +381,13 @@ class PPTImagePipeline:
                 logger=logger,
             )
             emit("style", "Style prompt generated", 35, total_slides=resolved_slide_count)
-            style_reference_data_url = self._image_bytes_to_data_url(style_template_bytes, style_template_mime)
+            style_reference_data_url = style_template_url or self._image_bytes_to_data_url(style_template_bytes, style_template_mime)
             style_reference_sha256 = hashlib.sha256(style_template_bytes).hexdigest() if style_template_bytes else ""
-            style_reference_mime = (style_template_mime or "image/png") if style_reference_data_url else None
+            style_reference_mime = None
+            if style_reference_data_url:
+                style_reference_mime = (style_template_mime or "").strip() or self._guess_style_reference_mime(
+                    style_reference_data_url
+                )
 
             emit("outline", "Generating outline...", 38, total_slides=resolved_slide_count)
             outline = self._generate_outline(
@@ -460,6 +490,7 @@ class PPTImagePipeline:
                             style_prompt,
                             information_density=normalized_information_density,
                         ),
+                        style_reference_data_url,
                         logger,
                     ): slide.page
                     for slide in outline.slides
@@ -536,6 +567,7 @@ class PPTImagePipeline:
         run_dir: Path,
         slide: SlideOutline,
         prompt: str,
+        style_reference_url: Optional[str] = None,
         logger: Optional[GenerationLogger] = None,
     ) -> SlideResult:
         file_name = f"slide_{slide.page:02d}.png"
@@ -545,6 +577,7 @@ class PPTImagePipeline:
             prompt,
             output_path,
             slide_page=slide.page,
+            style_reference_url=style_reference_url,
             logger=logger,
         )
         result = SlideResult(
@@ -1310,6 +1343,19 @@ When conflict occurs, preserve readability, hierarchy, and business clarity firs
             formatted.append(f"- {cleaned}")
         return "\n".join(formatted).strip()
 
+    @staticmethod
+    def _collect_style_guidance_lines(style_prompt: str, keywords: tuple[str, ...], limit: int) -> list[str]:
+        lines: list[str] = []
+        for raw_line in re.split(r"\r?\n+", style_prompt or ""):
+            normalized = re.sub(r"^[\-\*\d\.\、\s]+", "", raw_line).strip()
+            if not normalized:
+                continue
+            if any(keyword in normalized for keyword in keywords):
+                lines.append(normalized)
+            if len(lines) >= limit:
+                break
+        return lines
+
     def _finalize_style_prompt(self, raw_text: str, fallback_text: str) -> str:
         cleaned = self._sanitize_style_prompt(raw_text)
         if not cleaned:
@@ -1317,6 +1363,44 @@ When conflict occurs, preserve readability, hierarchy, and business clarity firs
         if not cleaned:
             cleaned = STYLE_PROMPT_GUARD
         return cleaned
+
+    def _build_style_consistency_guidance(self, style_prompt: str, *, has_reference: bool) -> str:
+        keywords = ("一致", "统一", "延续", "重复", "稳定", "共享", "家族", "系统", "同一")
+        extracted = self._collect_style_guidance_lines(style_prompt, keywords, limit=8)
+        defaults = [
+            "所有页面必须属于同一视觉家族，保持统一的背景系统、标题系统、色彩角色和组件语法。",
+            "允许页面结构因内容而变化，但不允许标题样式、卡片规则、图表语言和材质气质频繁漂移。",
+            "遇到取舍时优先保证跨页一致性、内容完整性和阅读清晰度。",
+        ] if has_reference else [
+            "整套页面必须共享一致的视觉家族、模块语法和阅读节奏。",
+            "允许布局按页型变化，但不允许风格家族和组件语言发生断裂。",
+        ]
+        return self._format_guidance_lines(extracted + defaults, limit=5)
+
+    def _build_style_master_lock_guidance(self, style_prompt: str, *, has_reference: bool) -> str:
+        extracted = self._collect_style_guidance_lines(style_prompt, STYLE_MASTER_LOCK_KEYWORDS, limit=8)
+        defaults = [
+            "把风格参考图视为整套 PPT 的母版锁定源，优先锁定背景系统、标题系统、色彩角色与容器语法。",
+            "标题带位置、标题层级、字号对比、主副标题关系和页眉/页脚习惯必须保持同一套母版规则。",
+            "主色、辅色、强调色和中性色的角色分工必须稳定，不允许按单页主题自由改色。",
+            "卡片、标签、边框、分隔条、连接线、图标、图表和装饰线必须延续同一种组件语法与细节粗细。",
+            "阴影、描边、圆角、材质、明暗对比和背景纹理只能做内容适配，不允许切换成另一套审美质感。",
+            "允许模块数量和信息组织按页型变化，但不允许母版级元素漂移或失去参考图的家族识别度。",
+        ] if has_reference else [
+            "锁定整套 deck 的背景系统、标题系统、色彩角色和容器语法，让所有页面共享同一母版。",
+            "允许页面内容结构变化，但母版级视觉元素不能频繁换样式、换材质或换配色角色。",
+        ]
+        return self._format_guidance_lines(extracted + defaults, limit=6)
+
+    @staticmethod
+    def _guess_style_reference_mime(reference_url: str) -> str:
+        raw = (reference_url or "").strip()
+        if raw.lower().startswith("data:"):
+            match = re.match(r"^data:([^;]+);base64,", raw, re.IGNORECASE)
+            if match:
+                return match.group(1).strip().lower()
+        guessed_type, _ = mimetypes.guess_type(raw)
+        return guessed_type or "image/png"
 
     def _sanitize_style_prompt(self, raw_text: str) -> str:
         lines: list[str] = []
@@ -1349,6 +1433,8 @@ When conflict occurs, preserve readability, hierarchy, and business clarity firs
         has_style_reference = bool(style_reference_data_url)
         normalized_density = self._normalize_information_density(information_density)
         density_guidance = self._build_information_density_guidance(normalized_density)
+        consistency_guidance = self._build_style_consistency_guidance(style_prompt, has_reference=has_style_reference)
+        master_lock_guidance = self._build_style_master_lock_guidance(style_prompt, has_reference=has_style_reference)
         density_section = (
             f"\n本页信息密度参考：\n{density_guidance}\n"
             if density_guidance
@@ -1357,6 +1443,7 @@ When conflict occurs, preserve readability, hierarchy, and business clarity firs
         reference_guidance = """
 风格参考图约束：
 - 已提供风格参考图。它是整套 PPT 非内容视觉风格的最高优先级真值与母版。
+- 必须执行母版锁定：把这张图里的背景系统、标题系统、色彩角色、容器语法、边框/分隔/连接方式、图标图表语言、材质与阴影质感视为整套页面固定母版，不得按单页自由改样。
 - 你生成的详细 prompt 必须让最终页面继续属于这张参考图的同一视觉家族：相同的标题系统、色彩关系、分区方式、模块框语言、边框/线条习惯、图解组织方式、图标语法、材质气质、信息密度与版式节奏。
 - 风格文字说明只是对参考图的补充解释，不得覆盖、弱化或重写参考图本身。
 - 不允许为了“更简洁、更现代、更像通用商务模板”而改造成另一套视觉系统。
@@ -1391,6 +1478,7 @@ When conflict occurs, preserve readability, hierarchy, and business clarity firs
 18. 如果参考图呈现的是某种特定的图解密度、模块结构、标题带样式、强调色策略、边框与箭头语言，你必须尽量在 prompt 中把这些非内容特征落地到当前页；如果参考图本身就带有更强装饰性、插画感、漫画感、拼贴感、极简感或其他鲜明表达，也应在保持一致性的前提下忠实保留。
 19. 不要用预设审美偏好去修正参考图或风格 DNA；只需要避免偏离、误读或扁平化成与原始风格不一致的另一套视觉体系。
 20. 输出时要像在给图像模型做逐层施工说明，尽量覆盖从整体布局到局部样式的全部关键细节，不要遗漏任何会影响最终画面一致性和信息完整性的点。
+21. 如果附带风格参考图，必须先锁定母版级视觉元素，再在这个母版内做当前页内容适配，不允许先换风格再排内容。
 
 整套上下文：
 Deck title: {deck_title}
@@ -1403,6 +1491,12 @@ Key points:
 {points}
 {density_section}
 {reference_guidance}
+
+跨页一致性硬约束：
+{consistency_guidance}
+
+母版锁定硬约束：
+{master_lock_guidance}
 
 风格 DNA：
 {style_prompt}
@@ -1527,6 +1621,8 @@ Key points:
         points = "；".join(x.strip() for x in slide.key_points if x.strip()) or "TBD point"
         normalized_density = self._normalize_information_density(information_density)
         density_guidance = self._build_information_density_guidance(normalized_density)
+        consistency_guidance = self._build_style_consistency_guidance(style_prompt, has_reference=False)
+        master_lock_guidance = self._build_style_master_lock_guidance(style_prompt, has_reference=False)
         density_section = (
             f"\n本页信息密度参考：\n{density_guidance}\n"
             if density_guidance
@@ -1536,11 +1632,17 @@ Key points:
 你是一名世界级演示视觉总监和图像生成提示词专家。现在请直接构造一段可用于生成整页 PPT 单页画面的完整提示词，这段提示词必须尽可能长、尽可能完整、尽可能具体、尽可能细致，宁可更详细也不要因为概括而漏掉细节。整页内容对应的全局上下文是：整套 PPT 标题为“{deck_title}”，用户需求是“{requirement}”，当前是第 {slide.page} 页，页面标题是“{slide.title}”，本页需要覆盖的核心要点包括：{points}。整页画面必须首先严格继承以下风格 DNA，并把它转化为当前页可执行、可落地、细到足以直接出图的画面描述：{style_prompt}
 {density_section}
 
+同时严格遵守以下跨页一致性约束：
+{consistency_guidance}
+
+同时执行以下母版锁定约束：
+{master_lock_guidance}
+
 在这段完整提示词里，你要像写一份逐层施工说明一样，从整页的顶部到底部、从左到右，把所有重要的可见元素和布局关系都写清楚，不要省略关键视觉决策。要明确交代整页是完整宽屏 PPT 页面，能够完整承载页面结构与信息层级；所有页面内实际出现的文字都必须是简体中文；要完整保留本页标题和核心要点，不能遗漏内容模块。请把版头、标题区、副标题或说明文字、主体信息区、卡片或模块、图表或信息图、标签、连接线、箭头、边框、图标、辅助说明区、页码区、背景处理、强调色位置、阴影与材质感这些元素尽可能详细地描述出来，并且写清楚它们之间的相对位置、大小关系、对齐关系、主次层级、节奏变化和视觉流向，不要只给抽象概括，也不要简单说“放一个模块”。
 
 这段提示词还必须充分说明排版气质和图解逻辑，包括页面骨架、留白方式、模块密度、信息分层、阅读动线、视觉锚点、对比关系、图解组织方式、卡片或容器处理、边框粗细倾向、分隔条样式、箭头语言、标签语法、图标风格、图表外观、光影和材质控制方式。要特别强调页面需要保持专业、清晰、适合正式汇报，整体可读性强，标题醒目，正文与标签自然，数字或重点结论有明确强调。如果本页天然适合流程图、对比图、分层图、时间线、矩阵图、结构图或指标模块，就要把相应的信息图表达方式写具体，而不是一句带过。整页视觉必须和整套 PPT 保持同一视觉家族，背景系统、色彩关系、卡片样式、边框语言、阴影质感、图标体系、图表语言、材质感和渲染气质都不能漂移；如果风格 DNA 本身暗示的是高密度技术图解、工程结构图、科研汇报式页面，或者更强装饰性、插画性、漫画性、拼贴性、极简性等鲜明表达，都应在一致性的前提下忠实延续，而不是被预设审美偏好改写。
 
-请同时把与当前风格系统一致的约束自然地融入这段提示词中：不要让画面偏离、误读或削弱参考风格或既定风格 DNA，不要无理由改变视觉家族、材质逻辑、色温关系、组件语言、信息密度和渲染方式；只有当参考风格或风格 DNA 本身包含某种表达方式时，才保留该表达。不要在提示词里出现分辨率、像素、seed、steps、CFG、宽高比、输出格式、模型参数等技术字段。最终形成的应该是一段高度完整、细节充分、几乎不把关键视觉决策留给模型猜测的完整提示词。
+请同时把与当前风格系统一致的约束自然地融入这段提示词中：不要让画面偏离、误读或削弱参考风格或既定风格 DNA，不要无理由改变视觉家族、材质逻辑、色温关系、组件语言、信息密度和渲染方式；只有当参考风格或风格 DNA 本身包含某种表达方式时，才保留该表达。若存在参考图语义时，进一步优先保留其母版级元素。不要在提示词里出现分辨率、像素、seed、steps、CFG、宽高比、输出格式、模型参数等技术字段。最终形成的应该是一段高度完整、细节充分、几乎不把关键视觉决策留给模型猜测的完整提示词。
 """.strip()
 
     def _generate_slide_image(
@@ -1549,10 +1651,12 @@ Key points:
         prompt: str,
         output_path: Path,
         slide_page: Optional[int] = None,
+        style_reference_url: Optional[str] = None,
         logger: Optional[GenerationLogger] = None,
     ) -> None:
         image_provider = (runtime_cfg.image_provider or "http").strip().lower()
         augmented_prompt = self._augment_prompt(prompt)
+        style_reference_url = (style_reference_url or "").strip() or None
         slide_dir = f"slides/slide_{slide_page:02d}" if slide_page else ""
         if logger and slide_page is not None:
             image_prompt_path = logger.write_text(f"{slide_dir}/image_prompt.txt", augmented_prompt)
@@ -1567,6 +1671,7 @@ Key points:
                     "timeout_seconds": self.settings.image_timeout,
                     "retries": self.settings.image_retries,
                     "image_prompt_path": image_prompt_path,
+                    **self._style_reference_log_meta(style_reference_url),
                 },
             )
             logger.set_slide(
@@ -1585,6 +1690,7 @@ Key points:
                 prompt=augmented_prompt,
                 output_path=output_path,
                 slide_page=slide_page,
+                style_reference_url=style_reference_url,
                 logger=logger,
             )
             return
@@ -1652,6 +1758,7 @@ Key points:
         prompt: str,
         output_path: Path,
         slide_page: Optional[int],
+        style_reference_url: Optional[str],
         logger: Optional[GenerationLogger],
     ) -> None:
         headers = {
@@ -1667,6 +1774,8 @@ Key points:
             "variants": self.settings.image_variants,
             "shutProgress": True,
         }
+        if style_reference_url:
+            payload["urls"] = [style_reference_url]
 
         attempts = 1 + max(0, self.settings.image_retries)
         last_error: Optional[Exception] = None
@@ -2000,6 +2109,23 @@ Key points:
             return None
         normalized_mime = (mime or "image/png").strip() or "image/png"
         return f"data:{normalized_mime};base64,{base64.b64encode(image_bytes).decode('utf-8')}"
+
+    @staticmethod
+    def _is_data_url(url: Optional[str]) -> bool:
+        return bool((url or "").strip().lower().startswith("data:"))
+
+    @classmethod
+    def _style_reference_log_meta(cls, url: Optional[str]) -> dict[str, Any]:
+        normalized = (url or "").strip()
+        if not normalized:
+            return {"style_reference_url": ""}
+        if cls._is_data_url(normalized):
+            return {
+                "style_reference_url": "",
+                "style_reference_data_url_prefix": normalized[:64],
+                "style_reference_data_url_length": len(normalized),
+            }
+        return {"style_reference_url": normalized}
 
     @staticmethod
     def _extract_urls(resp_json: dict[str, Any]) -> list[str]:

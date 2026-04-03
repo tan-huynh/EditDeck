@@ -20,6 +20,8 @@ const progressPercent = document.getElementById("progress-percent");
 const progressFill = document.getElementById("progress-fill");
 const progressDetail = document.getElementById("progress-detail");
 const progressSlide = document.getElementById("progress-slide");
+const styleTemplateInput = form.querySelector('input[name="style_template"]');
+const styleTemplateBase64Input = form.querySelector('input[name="style_template_base64"]');
 
 let currentRunId = "";
 
@@ -191,6 +193,15 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve((reader.result || "").toString());
+    reader.onerror = () => reject(new Error("模板图读取失败，请重新选择文件。"));
+    reader.readAsDataURL(file);
+  });
+}
+
 function appendEditableOverrides(formData) {
   EDITABLE_FIELD_NAMES.forEach((name) => {
     const nodes = form.querySelectorAll(`[name="${name}"]`);
@@ -299,6 +310,14 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
+  if (hasStyleFile) {
+    const styleTemplateBase64 = await readFileAsDataUrl(styleFile);
+    formData.set("style_template_base64", styleTemplateBase64);
+    formData.delete("style_template");
+  } else {
+    formData.delete("style_template_base64");
+  }
+
   const optionalKeys = [
     "base_url",
     "image_api_url",
@@ -307,6 +326,7 @@ form.addEventListener("submit", async (event) => {
     "text_model",
     "image_model",
     "style_description",
+    "style_template_base64",
     ...EDITABLE_FIELD_NAMES,
   ];
   optionalKeys.forEach((key) => {
@@ -341,3 +361,9 @@ form.addEventListener("submit", async (event) => {
     submitBtn.disabled = false;
   }
 });
+
+if (styleTemplateInput && styleTemplateBase64Input) {
+  styleTemplateInput.addEventListener("change", () => {
+    styleTemplateBase64Input.value = "";
+  });
+}

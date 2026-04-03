@@ -1,3 +1,6 @@
+import base64
+import binascii
+import re
 from datetime import datetime
 from pathlib import Path
 from threading import Lock, Thread
@@ -42,6 +45,7 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 JOBS: dict[str, dict[str, Any]] = {}
 JOBS_LOCK = Lock()
+DATA_URL_RE = re.compile(r"^data:(?P<mime>[^;]+);base64,(?P<data>.+)$", re.DOTALL)
 
 
 def _now_iso() -> str:
@@ -70,9 +74,62 @@ def _parse_information_density(information_density_raw: Optional[str]) -> str:
     return raw
 
 
-def _validate_style_inputs(style_description: Optional[str], style_bytes: Optional[bytes]) -> None:
-    if (style_description or "").strip() and style_bytes:
+def _validate_style_inputs(
+    style_description: Optional[str],
+    style_bytes: Optional[bytes],
+    style_reference_url: Optional[str],
+) -> None:
+    has_style_description = bool((style_description or "").strip())
+    has_style_bytes = bool(style_bytes)
+    has_style_reference_url = bool((style_reference_url or "").strip())
+    if has_style_description and (has_style_bytes or has_style_reference_url):
         raise ValueError("风格描述与风格模板图互斥，请二选一。")
+
+
+def _image_bytes_to_data_url(image_bytes: Optional[bytes], mime: Optional[str]) -> Optional[str]:
+    if not image_bytes:
+        return None
+    resolved_mime = (mime or "image/png").strip() or "image/png"
+    encoded = base64.b64encode(image_bytes).decode("ascii")
+    return f"data:{resolved_mime};base64,{encoded}"
+
+
+def _decode_style_template_base64(style_template_base64: Optional[str]) -> tuple[Optional[bytes], Optional[str], Optional[str]]:
+    raw = (style_template_base64 or "").strip()
+    if not raw:
+        return None, None, None
+
+    match = DATA_URL_RE.fullmatch(raw)
+    if not match:
+        raise ValueError("style_template_base64 必须是 data:image/...;base64,... 格式。")
+
+    mime = match.group("mime").strip().lower()
+    if not mime.startswith("image/"):
+        raise ValueError("style_template_base64 必须是图片 data URL。")
+
+    try:
+        data = base64.b64decode(match.group("data"), validate=True)
+    except (ValueError, binascii.Error) as exc:
+        raise ValueError("style_template_base64 不是有效的 base64 图片数据。") from exc
+
+    if not data:
+        raise ValueError("style_template_base64 不能为空图片。")
+
+    return data, mime, raw
+
+
+async def _resolve_style_template_payload(
+    style_template: Optional[UploadFile],
+    style_template_base64: Optional[str],
+) -> tuple[Optional[bytes], Optional[str], Optional[str]]:
+    base64_bytes, base64_mime, base64_data_url = _decode_style_template_base64(style_template_base64)
+    if base64_bytes:
+        return base64_bytes, base64_mime, base64_data_url
+
+    style_bytes = await style_template.read() if style_template else None
+    style_mime = style_template.content_type if style_template else None
+    style_data_url = _image_bytes_to_data_url(style_bytes, style_mime)
+    return style_bytes, style_mime, style_data_url
 
 
 def _parse_bool(value: Optional[str]) -> bool:
@@ -249,6 +306,7 @@ def _run_generation_job(
     style_description: Optional[str],
     style_bytes: Optional[bytes],
     style_mime: Optional[str],
+    style_template_url: Optional[str],
     runtime_cfg,
     source_runtime_cfg,
     export_mode: str,
@@ -288,6 +346,7 @@ def _run_generation_job(
             style_description=style_description,
             style_template_bytes=style_bytes,
             style_template_mime=style_mime,
+            style_template_url=style_template_url,
             runtime_cfg=runtime_cfg,
             export_mode=export_mode,
             information_density=information_density,
@@ -390,6 +449,7 @@ async def generate_sync(
     information_density: Optional[str] = Form(default="medium"),
     style_description: Optional[str] = Form(default=None),
     style_template: Optional[UploadFile] = File(default=None),
+    style_template_base64: Optional[str] = Form(default=None),
     source_files: Optional[list[UploadFile]] = File(default=None),
     export_mode: str = Form(default="both"),
     generate_editable_ppt: Optional[str] = Form(default="false"),
@@ -479,14 +539,20 @@ async def generate_sync(
                 force_reextract_assets=_parse_bool(force_reextract_assets) if force_reextract_assets is not None else None,
                 disable_asset_reuse=_parse_bool(disable_asset_reuse) if disable_asset_reuse is not None else None,
             )
-        style_bytes = await style_template.read() if style_template else None
-        style_mime = style_template.content_type if style_template else None
+        style_bytes, style_mime, style_reference_url = await _resolve_style_template_payload(
+            style_template,
+            style_template_base64,
+        )
         source_payloads = [
             SourceFileInput(name=upload.filename or "source", data=await upload.read())
             for upload in (source_files or [])
             if upload and (upload.filename or "").strip()
         ]
-        _validate_style_inputs(style_description=style_description, style_bytes=style_bytes)
+        _validate_style_inputs(
+            style_description=style_description,
+            style_bytes=style_bytes,
+            style_reference_url=style_reference_url,
+        )
         prepared_requirement = source_processor.prepare_requirement(
             user_requirement=user_requirement,
             source_files=source_payloads,
@@ -499,6 +565,7 @@ async def generate_sync(
             style_description=style_description,
             style_template_bytes=style_bytes,
             style_template_mime=style_mime,
+            style_template_url=style_reference_url,
             runtime_cfg=runtime_cfg,
             export_mode=export_mode,
             information_density=resolved_information_density,
@@ -526,6 +593,7 @@ async def generate_start(
     information_density: Optional[str] = Form(default="medium"),
     style_description: Optional[str] = Form(default=None),
     style_template: Optional[UploadFile] = File(default=None),
+    style_template_base64: Optional[str] = Form(default=None),
     source_files: Optional[list[UploadFile]] = File(default=None),
     export_mode: str = Form(default="both"),
     generate_editable_ppt: Optional[str] = Form(default="false"),
@@ -615,14 +683,20 @@ async def generate_start(
                 force_reextract_assets=_parse_bool(force_reextract_assets) if force_reextract_assets is not None else None,
                 disable_asset_reuse=_parse_bool(disable_asset_reuse) if disable_asset_reuse is not None else None,
             )
-        style_bytes = await style_template.read() if style_template else None
-        style_mime = style_template.content_type if style_template else None
+        style_bytes, style_mime, style_reference_url = await _resolve_style_template_payload(
+            style_template,
+            style_template_base64,
+        )
         source_payloads = [
             SourceFileInput(name=upload.filename or "source", data=await upload.read())
             for upload in (source_files or [])
             if upload and (upload.filename or "").strip()
         ]
-        _validate_style_inputs(style_description=style_description, style_bytes=style_bytes)
+        _validate_style_inputs(
+            style_description=style_description,
+            style_bytes=style_bytes,
+            style_reference_url=style_reference_url,
+        )
 
         job_id = _create_job()
         thread = Thread(
@@ -636,6 +710,7 @@ async def generate_start(
                 style_description,
                 style_bytes,
                 style_mime,
+                style_reference_url,
                 runtime_cfg,
                 source_runtime_cfg,
                 export_mode,

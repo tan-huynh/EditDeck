@@ -321,6 +321,7 @@ def _run_generate(args: argparse.Namespace) -> int:
         style_description=args.style_description,
         style_template_bytes=style_bytes,
         style_template_mime=style_mime,
+        style_template_url=None,
         runtime_cfg=runtime_cfg,
         export_mode=args.export_mode,
         information_density=_parse_information_density(args.information_density),
