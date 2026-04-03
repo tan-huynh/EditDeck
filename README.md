@@ -9,6 +9,20 @@
   <img src="https://img.shields.io/badge/License-MIT-black?style=flat-square" alt="MIT License" />
 </p>
 
+<p align="center"><strong>AI Image -> EditDeck PPT -> Fully Editable</strong></p>
+<table align="center">
+  <tr>
+    <th width="33%">1) AI-generated image (origin)</th>
+    <th width="33%">2) EditDeck PPT output (pic)</th>
+    <th width="33%">3) Fully editable PPT in EditDeck (edit)</th>
+  </tr>
+  <tr>
+    <td><img src="./case-study/origin.png" alt="AI-generated image origin" /></td>
+    <td><img src="./case-study/pic.png" alt="EditDeck PPT output pic" /></td>
+    <td><img src="./case-study/edit.png" alt="Fully editable PPT edit" /></td>
+  </tr>
+</table>
+
 <p align="center">
   <a href="#why">Why</a> ·
   <a href="#highlights">Highlights</a> ·
@@ -171,6 +185,10 @@ python -m app.cli generate "Create an AI office productivity improvement plan"
 
 The web entry point is provided by [webapp/main.py](./webapp/main.py), ideal for filling in requirements, styles, and runtime parameters directly on the page.
 
+- Style input supports two modes: `style_description` (text) or `style_template` (reference image), choose one
+- Upload reference files via `source_files` (multiple files): `.txt` / `.md` / `.pdf` / `.docx`
+- In replica mode, upload source slide images via `replica_images` (multiple files): `.png` / `.jpg` / `.jpeg` / `.webp`
+
 ### CLI
 
 Generate images and a standard PPT only:
@@ -178,6 +196,16 @@ Generate images and a standard PPT only:
 ```bash
 python -m app.cli generate "Create an AI office productivity improvement plan" \
   --slide-count auto \
+  --export-mode both
+```
+
+Generate with style and uploaded reference files:
+
+```bash
+python -m app.cli generate "Create an AI customer service knowledge base upgrade deck" \
+  --style-description "16:9 dark tech style, blue-cyan palette, high readability" \
+  --source-file ./docs/brief.md \
+  --source-file ./docs/customer_faq.pdf \
   --export-mode both
 ```
 
@@ -213,6 +241,7 @@ Common parameters:
 - `--config-file`: specify a config file; defaults to `config/app.yaml`
 - `--style-description`: specify style via text
 - `--style-template`: specify style via image
+- `--source-file`: upload reference files (repeatable)
 - `--editable-ppt`: continue generating an editable PPT after image generation
 - `-edit` / `--edit`: enable the currently available editable asset matching backend
 - `--mineru-api-key`: override `mineru.api_key` as needed
