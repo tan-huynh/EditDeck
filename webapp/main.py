@@ -9,6 +9,7 @@ from pathlib import Path
 from threading import Lock, Thread
 from typing import Any, Callable, Optional, Sequence
 from uuid import uuid4
+from typing import Any, Union
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -867,7 +868,7 @@ def _serialize_slide_payloads(slides: Sequence[dict[str, Any]]) -> list[dict[str
     return out
 
 
-def _serialize_editable_result(raw_result: EditableDeckResult | dict[str, Any]) -> dict[str, Any]:
+def _serialize_editable_result(raw_result: Union[EditableDeckResult, dict[str, Any]]) -> dict[str, Any]:
     payload = raw_result.model_dump() if isinstance(raw_result, EditableDeckResult) else dict(raw_result)
     payload["pptx_url"] = payload.get("pptx_url") or _path_to_generated_url(str(payload.get("pptx_path", "")))
     slides: list[dict[str, Any]] = []
