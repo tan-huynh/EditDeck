@@ -12,6 +12,8 @@ function buildSlide(slide, pptx) {
   // slide-building code
 }
 
+The first non-whitespace characters of your output must be exactly `function buildSlide(slide, pptx) {` and your output must end at its matching closing `}` with no extra text before or after.
+
 # Runtime Constraints
 1. The runtime already provides `slide` and `pptx`.
 2. You must NOT create `new PptxGenJS()`.
