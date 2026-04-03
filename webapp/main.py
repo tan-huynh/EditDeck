@@ -792,7 +792,7 @@ def _serialize_slide_payloads(slides: Sequence[dict[str, Any]]) -> list[dict[str
     return out
 
 
-def _serialize_editable_result(raw_result: EditableDeckResult | dict[str, Any]) -> dict[str, Any]:
+def _serialize_editable_result(raw_result: EditableDeckResult) -> dict[str, Any]:
     payload = raw_result.model_dump() if isinstance(raw_result, EditableDeckResult) else dict(raw_result)
     payload["pptx_url"] = payload.get("pptx_url") or _path_to_generated_url(str(payload.get("pptx_path", "")))
     slides: list[dict[str, Any]] = []
