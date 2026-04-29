@@ -12,3 +12,7 @@
 {"step": "prompt_generation", "message": "Completed prompt generation 4/14", "progress": 57, "current_slide": 4, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:34:38Z"}
 {"step": "prompt_generation", "message": "Completed prompt generation 5/14", "progress": 58, "current_slide": 5, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:37:03Z"}
 {"step": "prompt_generation", "message": "Completed prompt generation 6/14", "progress": 59, "current_slide": 6, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:39:30Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 7/14", "progress": 61, "current_slide": 7, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:42:47Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 8/14", "progress": 62, "current_slide": 8, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:47:02Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 9/14", "progress": 63, "current_slide": 9, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:57:02Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 10/14", "progress": 64, "current_slide": 10, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T12:01:15Z"}

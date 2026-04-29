@@ -1,48 +1,48 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EditDeck Web 工作台</title>
+    <title>EditDeck Web Workbench</title>
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <main class="page">
       <header class="hero">
-        <h1>EditDeck 全流程可编辑工作台</h1>
-        <p>支持：纯图生成、可编辑 PPT、图片复刻，所有关键步骤都可视化并可手动编辑确认。</p>
+        <h1>EditDeck Editable Presentation Workbench</h1>
+        <p>Generate image-based decks, editable PPTX files, and image-replica decks with visible checkpoints and manual review.</p>
       </header>
 
       <section class="card">
-        <h2>模式与输入</h2>
+        <h2>Mode and input</h2>
         <div class="mode-switch">
           <label class="radio">
             <input type="radio" name="workflow_mode" value="generate" checked />
-            <span>需求生成模式</span>
+            <span>Requirement generation mode</span>
           </label>
           <label class="radio">
             <input type="radio" name="workflow_mode" value="replica" />
-            <span>图片复刻模式</span>
+            <span>Image replica mode</span>
           </label>
         </div>
 
         <form id="workflow-form">
           <div id="generate-fields">
             <label>
-              需求描述
+              Requirement
               <textarea
                 name="user_requirement"
                 rows="4"
-                placeholder="例如：做一份AI客服知识库升级方案，面向管理层，突出痛点-方案-收益-落地节奏"
+                placeholder="Example: Create an executive deck for an AI customer-service knowledge-base upgrade, highlighting pain points, solution, benefits, and rollout rhythm."
               ></textarea>
             </label>
             <div class="row">
               <label>
-                页数
-                <input name="slide_count" type="text" value="auto" placeholder="auto 或 6" />
+                Slide count
+                <input name="slide_count" type="text" value="auto" placeholder="auto or 6" />
               </label>
               <label>
-                信息密度
+                Information density
                 <select name="information_density">
                   <option value="auto">auto</option>
                   <option value="low">low</option>
@@ -54,20 +54,20 @@
             </div>
             <div class="row">
               <label>
-                风格描述
-                <textarea name="style_description" rows="3" placeholder="可选，不填则自动推断风格"></textarea>
+                Style description
+                <textarea name="style_description" rows="3" placeholder="Optional. Leave blank to infer the style automatically."></textarea>
               </label>
               <label>
-                风格参考图（可选）
+                Style reference image (optional)
                 <input name="style_template" type="file" accept="image/*" />
                 <span class="field-hint">
-                  直接上传本地图片即可。提交时会自动转成 base64，再由后端还原为参考图参与风格分析。
+                  Upload a local image. The browser converts it to base64 and the backend restores it for style analysis.
                 </span>
               </label>
               <input name="style_template_base64" type="hidden" />
             </div>
             <label>
-              参考资料（可选，多文件）
+              Reference files (optional, multiple)
               <input name="source_files" type="file" accept=".txt,.md,.pdf,.docx" multiple />
             </label>
           </div>
@@ -75,78 +75,78 @@
           <div id="replica-fields" class="hidden">
             <div class="row">
               <label>
-                复刻标题
-                <input name="replica_deck_title" type="text" value="图片复刻结果" />
+                Replica title
+                <input name="replica_deck_title" type="text" value="Image replica result" />
               </label>
               <label>
-                输出模式
+                Export mode
                 <select name="export_mode">
-                  <option value="both" selected>图片 + PPT</option>
-                  <option value="images">仅图片</option>
-                  <option value="ppt">仅PPT</option>
+                  <option value="both" selected>Images + PPT</option>
+                  <option value="images">Images only</option>
+                  <option value="ppt">PPT only</option>
                 </select>
               </label>
             </div>
             <label>
-              上传待复刻的 PPT 图片（按文件名排序）
+              Upload PPT images to replicate (sorted by filename)
               <input name="replica_images" type="file" accept=".png,.jpg,.jpeg,.webp" multiple />
             </label>
           </div>
 
           <div class="row">
             <label>
-              输出模式（需求生成）
+              Export mode (requirement generation)
               <select name="export_mode_generate">
-                <option value="both" selected>图片 + PPT</option>
-                <option value="images">仅图片</option>
-                <option value="ppt">仅PPT</option>
+                <option value="both" selected>Images + PPT</option>
+                <option value="images">Images only</option>
+                <option value="ppt">PPT only</option>
               </select>
             </label>
             <label>
-              默认生成后自动转可编辑（图片复刻模式）
+              Auto-convert to editable after generation (replica mode)
               <select name="replica_generate_editable">
-                <option value="false" selected>否</option>
-                <option value="true">是</option>
+                <option value="false" selected>No</option>
+                <option value="true">Yes</option>
               </select>
             </label>
           </div>
 
           <details>
-            <summary>模型与后端参数（可选覆盖，留空则走 YAML 默认）</summary>
+            <summary>Model and backend parameters (optional overrides; blank uses YAML defaults)</summary>
             <div class="row">
               <label>
                 Base URL
-                <input name="base_url" type="text" placeholder="默认来自 config/app.yaml" />
+                <input name="base_url" type="text" placeholder="Default from config/app.yaml" />
               </label>
               <label>
-                图片接口 URL
-                <input name="image_api_url" type="text" placeholder="默认来自 config/app.yaml" />
-              </label>
-            </div>
-            <div class="row">
-              <label>
-                文本模型
-                <input name="text_model" type="text" placeholder="默认来自 config/app.yaml" />
-              </label>
-              <label>
-                图片模型
-                <input name="image_model" type="text" placeholder="默认来自 config/app.yaml" />
+                Image API URL
+                <input name="image_api_url" type="text" placeholder="Default from config/app.yaml" />
               </label>
             </div>
             <div class="row">
               <label>
-                文本 API Key
-                <input name="text_api_key" type="password" placeholder="留空使用 YAML" />
+                Text model
+                <input name="text_model" type="text" placeholder="Default from config/app.yaml" />
               </label>
               <label>
-                图片 API Key
-                <input name="image_api_key" type="password" placeholder="留空使用 YAML" />
+                Image model
+                <input name="image_model" type="text" placeholder="Default from config/app.yaml" />
+              </label>
+            </div>
+            <div class="row">
+              <label>
+                Text API key
+                <input name="text_api_key" type="password" placeholder="Blank uses YAML" />
+              </label>
+              <label>
+                Image API key
+                <input name="image_api_key" type="password" placeholder="Blank uses YAML" />
               </label>
             </div>
           </details>
 
           <details>
-            <summary>可编辑 PPT 参数（可选覆盖）</summary>
+            <summary>Editable PPT parameters (optional overrides)</summary>
             <div class="row">
               <label>
                 Editable Base URL
@@ -159,41 +159,41 @@
             </div>
             <div class="row">
               <label>
-                Editable 模型
+                Editable model
                 <input name="editable_model" type="text" />
               </label>
               <label>
-                浏览器路径
+                Browser path
                 <input name="editable_browser_path" type="text" />
               </label>
             </div>
             <div class="row">
               <label>
-                Editable 最大重试
+                Editable max attempts
                 <input name="editable_max_attempts" type="number" min="1" />
               </label>
               <label>
-                Editable 最大 Token
+                Editable max tokens
                 <input name="editable_max_tokens" type="number" min="1" />
               </label>
             </div>
             <div class="row">
               <label>
-                Editable 下载超时(ms)
+                Editable download timeout (ms)
                 <input name="editable_download_timeout_ms" type="number" min="1000" />
               </label>
               <label>
-                Editable 重试间隔(s)
+                Editable retry interval (s)
                 <input name="editable_sleep_seconds" type="number" step="0.1" min="0" />
               </label>
             </div>
             <div class="row">
               <label>
-                Editable Prompt 文件
+                Editable prompt file
                 <input name="editable_prompt_file" type="text" />
               </label>
               <label>
-                资产输出目录
+                Asset output directory
                 <input name="assets_dir" type="text" />
               </label>
             </div>
@@ -201,7 +201,7 @@
           </details>
 
           <details>
-            <summary>MinerU 参数（可选覆盖）</summary>
+            <summary>MinerU parameters (optional overrides)</summary>
             <div class="row">
               <label>
                 MinerU Base URL
@@ -214,33 +214,33 @@
             </div>
             <div class="row">
               <label>
-                MinerU 版本
+                MinerU version
                 <input name="mineru_model_version" type="text" />
               </label>
               <label>
-                MinerU 语言
+                MinerU language
                 <input name="mineru_language" type="text" />
               </label>
             </div>
             <div class="row">
               <label>
-                轮询间隔(s)
+                Poll interval (s)
                 <input name="mineru_poll_interval_seconds" type="number" step="0.5" min="0.5" />
               </label>
               <label>
-                超时(s)
+                Timeout (s)
                 <input name="mineru_timeout_seconds" type="number" min="30" />
               </label>
             </div>
             <div class="row">
               <label>
-                细化深度
+                Refinement depth
                 <input name="mineru_max_refine_depth" type="number" min="0" />
               </label>
               <label>
                 OCR
                 <select name="mineru_is_ocr">
-                  <option value="">跟随 YAML</option>
+                  <option value="">Use YAML</option>
                   <option value="true">true</option>
                   <option value="false">false</option>
                 </select>
@@ -248,17 +248,17 @@
             </div>
             <div class="row">
               <label>
-                公式识别
+                Formula recognition
                 <select name="mineru_enable_formula">
-                  <option value="">跟随 YAML</option>
+                  <option value="">Use YAML</option>
                   <option value="true">true</option>
                   <option value="false">false</option>
                 </select>
               </label>
               <label>
-                表格识别
+                Table recognition
                 <select name="mineru_enable_table">
-                  <option value="">跟随 YAML</option>
+                  <option value="">Use YAML</option>
                   <option value="true">true</option>
                   <option value="false">false</option>
                 </select>
@@ -267,35 +267,35 @@
             <div class="row">
               <label class="checkbox">
                 <input name="force_reextract_assets" type="checkbox" value="true" />
-                <span>强制重新提取素材</span>
+                <span>Force asset re-extraction</span>
               </label>
               <label class="checkbox">
                 <input name="disable_asset_reuse" type="checkbox" value="true" />
-                <span>禁用素材复用</span>
+                <span>Disable asset reuse</span>
               </label>
             </div>
           </details>
         </form>
 
         <div class="toolbar">
-          <button id="prepare-btn" type="button">1. 生成风格与大纲</button>
-          <button id="replica-btn" type="button" class="hidden">1. 开始图片复刻</button>
-          <button id="save-edits-btn" type="button" class="secondary">2. 保存风格/大纲修改</button>
-          <button id="render-btn" type="button">3. 渲染整套 PPT</button>
-          <button id="rerender-btn" type="button" class="secondary">3+. 重绘选中页</button>
-          <button id="editable-btn" type="button" class="accent">4. 生成可编辑 PPT</button>
-          <button id="editable-selected-btn" type="button" class="secondary">4+. 仅生成选中页可编辑预览</button>
+          <button id="prepare-btn" type="button">1. Generate style and outline</button>
+          <button id="replica-btn" type="button" class="hidden">1. Start image replica</button>
+          <button id="save-edits-btn" type="button" class="secondary">2. Save style/outline edits</button>
+          <button id="render-btn" type="button">3. Render full PPT</button>
+          <button id="rerender-btn" type="button" class="secondary">3+. Redraw selected pages</button>
+          <button id="editable-btn" type="button" class="accent">4. Generate editable PPT</button>
+          <button id="editable-selected-btn" type="button" class="secondary">4+. Generate selected editable previews</button>
         </div>
       </section>
 
       <section id="defaults-card" class="card">
-        <h2>当前 YAML 默认配置</h2>
-        <pre id="defaults-text">加载中...</pre>
+        <h2>Current YAML defaults</h2>
+        <pre id="defaults-text">Loading...</pre>
       </section>
 
       <section id="progress-card" class="card hidden">
         <div class="progress-head">
-          <strong id="progress-step">准备中...</strong>
+          <strong id="progress-step">Preparing...</strong>
           <span id="progress-percent">0%</span>
         </div>
         <div class="progress-track">
@@ -308,10 +308,10 @@
       <section id="status" class="card hidden"></section>
 
       <section id="editor-card" class="card hidden">
-        <h2>可编辑确认区（风格与大纲）</h2>
+        <h2>Editable review area (style and outline)</h2>
         <div class="row">
           <label>
-            Deck 标题
+            Deck title
             <input id="deck-title-input" type="text" />
           </label>
           <label>
@@ -320,24 +320,24 @@
           </label>
         </div>
         <label>
-          风格 Prompt（可改后保存）
+          Style prompt (edit and save before rendering)
           <textarea id="style-prompt-input" rows="8"></textarea>
         </label>
-        <p class="hint">大纲可编辑、上下移动，保存后再开始渲染。</p>
+        <p class="hint">The outline can be edited and reordered. Save it before rendering.</p>
         <div id="outline-editor" class="outline-editor"></div>
       </section>
 
       <section id="result-card" class="card hidden">
-        <h2>生成结果与即时预览</h2>
+        <h2>Generated result and live preview</h2>
         <div class="download-row">
-          <a id="pptx-link" class="download-btn hidden" target="_blank" rel="noopener">下载 PPT</a>
-          <a id="editable-link" class="download-btn accent hidden" target="_blank" rel="noopener">下载可编辑 PPT</a>
+          <a id="pptx-link" class="download-btn hidden" target="_blank" rel="noopener">Download PPT</a>
+          <a id="editable-link" class="download-btn accent hidden" target="_blank" rel="noopener">Download editable PPT</a>
         </div>
         <div id="slides-grid" class="slides-grid"></div>
       </section>
 
       <section id="editable-preview-card" class="card hidden">
-        <h2>可编辑 PPT 预览</h2>
+        <h2>Editable PPT preview</h2>
         <div id="editable-grid" class="editable-grid"></div>
       </section>
     </main>

@@ -643,20 +643,20 @@ class SourceDocumentProcessor:
 
 要求：
 1. final_requirement must be in English, oriented towards downstream PPT generation models, preserving user goals, audiences, tones, and specific requests.
-2. 你要主动吸收文件中的主题、章节结构、关键事实、数据结论、方案步骤、案例信息和专业术语，但不要原样堆砌全文。
-3. final_requirement 应该像一份完整的 PPT 任务说明，既有主题，也有建议覆盖的核心内容范围。
-4. 如果文件内容与用户一句话有冲突，以用户明确要求为最高优先级。
-5. 不要编造文件里没有的信息；不确定时用更保守的概括。
-6. summary 用 1-3 句概括你从文件里提炼了什么。
-7. 不要输出 markdown。
+2. Absorb the file's topics, section structure, key facts, data conclusions, process steps, case details, and terminology without dumping the source text verbatim.
+3. final_requirement should read like a complete PPT task brief with a clear topic and suggested content coverage.
+4. If the file content conflicts with the user's explicit request, the user's request has priority.
+5. Do not invent information absent from the file; use conservative wording when uncertain.
+6. summary should describe what you extracted from the file in 1-3 sentences.
+7. Do not output markdown.
 
 [User Requirement]
-{user_requirement or "用户未提供额外文字要求。"}
+{user_requirement or "The user did not provide an additional text requirement."}
 
 [Extracted File Content]
 {chr(10).join(source_blocks)}
 """.strip()
-        system_prompt = "你负责把原始文件内容整理成稳定、清晰、适合生成 PPT 的任务说明。"
+        system_prompt = "You organize raw file content into a stable, clear task brief suitable for PPT generation."
         raw = chat_completion_text(
             provider=runtime_cfg.text_provider,
             base_url=runtime_cfg.text_base_url,
@@ -711,26 +711,26 @@ class SourceDocumentProcessor:
         runtime_cfg: SourceIngestRuntimeConfig,
     ) -> str:
         user_prompt = f"""
-你是 PPT 前处理分析助手。请判断下面这段文档内容，对“生成这份 PPT”是否真的有帮助。
+You are a PPT preprocessing analyst. Decide whether the following document chunk is useful for generating this PPT.
 
-输出必须是严格 JSON，且只能输出 JSON：
+Output strict JSON only:
 {{
   "useful": true,
   "refined_text": "string"
 }}
 
-判断与提炼规则：
-1. useful 表示这段内容是否对后续 PPT 策划、结构设计、事实依据、案例、数据、结论、方案步骤、背景说明有直接帮助。
-2. 如果只是冗长铺垫、重复表述、无关目录、格式噪音、版权声明、空泛客套、与用户意图明显无关的内容，应返回 useful=false。
-3. 如果 useful=true，refined_text 必须提炼成适合 PPT 使用的关键信息摘要，而不是原文复读。
-4. refined_text 要优先保留：主题、背景、问题、目标、结论、数据、方法、步骤、对比、案例、建议、专业术语。
-5. refined_text 必须尊重用户当前需求，不能把文档主题带偏；如果与用户要求冲突，按用户要求取舍。
+Rules:
+1. useful means whether this chunk directly helps PPT planning, structure, evidence, cases, data, conclusions, process steps, or background.
+2. Return useful=false for verbose setup, repeated wording, irrelevant tables of contents, formatting noise, copyright notices, empty politeness, or content clearly unrelated to the user's intent.
+3. If useful=true, refined_text must be a PPT-ready information summary, not a copy of the source.
+4. refined_text should preserve topics, background, problems, goals, conclusions, data, methods, steps, comparisons, cases, recommendations, and terminology.
+5. refined_text must respect the current user request; if the document conflicts with the request, follow the request.
 6. refined_text must be in English, preferably concise, but never lose critical facts, data, conclusions, or steps. Typically around {MAX_REFINED_CHUNK_CHARS} characters, slightly more if necessary.
-7. 如果 useful=false，refined_text 返回空字符串。
-8. 不要输出 markdown，不要解释。
+7. If useful=false, return an empty string for refined_text.
+8. Do not output markdown or explanations.
 
 [User Requirement]
-{user_requirement or "用户未提供额外文字要求。"}
+{user_requirement or "The user did not provide an additional text requirement."}
 
 [Source File]
 {source.name}
@@ -739,7 +739,7 @@ class SourceDocumentProcessor:
 chunk {chunk_index}/{total_chunks}
 {chunk}
 """.strip()
-        system_prompt = "你负责筛选文档中真正有助于生成 PPT 的内容，并提炼成高密度摘要。"
+        system_prompt = "You select document content that is truly useful for PPT generation and condense it into a high-density summary."
         raw = chat_completion_text(
             provider=runtime_cfg.text_provider,
             base_url=runtime_cfg.text_base_url,

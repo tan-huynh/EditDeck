@@ -2,7 +2,7 @@
   "run_id": "20260429_130404_607675ae",
   "run_dir": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae",
   "created_at": "2026-04-29T11:16:05Z",
-  "updated_at": "2026-04-29T11:39:30Z",
+  "updated_at": "2026-04-29T12:01:15Z",
   "status": "running",
   "request": {
     "requirement": "Create a comprehensive academic presentation titled 'Robust and Reproducible Evaluation of Error-Rate Control in High-Dimensional Discrete and Heterogeneous Data.' The presentation must cover: (1) Research background on multiple testing challenges in high-dimensional discrete and heterogeneous data; (2) Methodological framework including False Discovery Rate (FDR), False Discovery Exceedance (FDX), discrete-aware procedures, and heterogeneous test procedures; (3) Specific procedure comparison: Benjamini-Hochberg (BH), Benjamini-Yekutieli (BY), DBH-SU, DBH-SD, HLR, and HGR; (4) Simulation methodology and reproducible R framework implementation; (5) Research phases from literature review through application and publication; (6) Application domains including genomic data, GWAS, NGS read-count data, and RNA-seq; (7) Evaluation metrics (FDR, FDX, power, FDP stability) and expected scientific contributions. Preserve the document's logical structure, maintain professional academic tone, and ensure all slide text is strictly in English. The presentation should be suitable for academic conferences, research seminars, or methodological workshops in bioinformatics and statistical methodology.",
@@ -94,7 +94,10 @@
       "prompt_fallback_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_02/prompt_fallback.txt",
       "prompt_request_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_02/prompt_request.json",
       "prompt_reference_image_attached": false,
-      "prompt_reference_image_sha256": ""
+      "prompt_reference_image_sha256": "",
+      "prompt_response_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_02/prompt_response.txt",
+      "prompt_final_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_02/prompt_final.txt",
+      "prompt_fallback_used": false
     },
     "3": {
       "page": 3,
@@ -214,7 +217,10 @@
       "prompt_fallback_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_09/prompt_fallback.txt",
       "prompt_request_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_09/prompt_request.json",
       "prompt_reference_image_attached": false,
-      "prompt_reference_image_sha256": ""
+      "prompt_reference_image_sha256": "",
+      "prompt_response_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_09/prompt_response.txt",
+      "prompt_final_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_09/prompt_final.txt",
+      "prompt_fallback_used": false
     },
     "10": {
       "page": 10,
@@ -238,7 +244,16 @@
         "Explain the Superiority (SU) and Superiority-Down (SD) modifications for discrete data。",
         "Describe how these methods improve FDR control under discrete distributions。",
         "Compare their performance characteristics with standard BH and BY procedures。"
-      ]
+      ],
+      "prompt_system_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_11/prompt_system.txt",
+      "prompt_user_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_11/prompt_user.txt",
+      "prompt_fallback_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_11/prompt_fallback.txt",
+      "prompt_request_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_11/prompt_request.json",
+      "prompt_reference_image_attached": false,
+      "prompt_reference_image_sha256": "",
+      "prompt_response_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_11/prompt_response.txt",
+      "prompt_final_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_11/prompt_final.txt",
+      "prompt_fallback_used": false
     },
     "12": {
       "page": 12,
@@ -247,7 +262,16 @@
         "Describe hierarchical testing for structured hypotheses in genomic pathways。",
         "Explain group-based procedures for correlated features and gene sets。",
         "Outline the integration with FDR control in hierarchical testing frameworks。"
-      ]
+      ],
+      "prompt_system_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_12/prompt_system.txt",
+      "prompt_user_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_12/prompt_user.txt",
+      "prompt_fallback_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_12/prompt_fallback.txt",
+      "prompt_request_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_12/prompt_request.json",
+      "prompt_reference_image_attached": false,
+      "prompt_reference_image_sha256": "",
+      "prompt_response_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_12/prompt_response.txt",
+      "prompt_final_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_12/prompt_final.txt",
+      "prompt_fallback_used": false
     },
     "13": {
       "page": 13,
@@ -256,7 +280,13 @@
         "Detail the simulation design for comparative evaluation of error-rate control methods。",
         "Describe the R package architecture for reproducible research and code sharing。",
         "Specify the metrics for performance assessment including FDR, FDX, power, and FDP stability。"
-      ]
+      ],
+      "prompt_system_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_13/prompt_system.txt",
+      "prompt_user_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_13/prompt_user.txt",
+      "prompt_fallback_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_13/prompt_fallback.txt",
+      "prompt_request_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_13/prompt_request.json",
+      "prompt_reference_image_attached": false,
+      "prompt_reference_image_sha256": ""
     },
     "14": {
       "page": 14,
@@ -265,7 +295,13 @@
         "Highlight applications in GWAS, RNA-seq, and NGS read-count data analysis。",
         "Summarize expected contributions to statistical methodology and bioinformatics。",
         "Outline future directions for discrete data analysis and reproducible research。"
-      ]
+      ],
+      "prompt_system_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_14/prompt_system.txt",
+      "prompt_user_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_14/prompt_user.txt",
+      "prompt_fallback_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_14/prompt_fallback.txt",
+      "prompt_request_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_14/prompt_request.json",
+      "prompt_reference_image_attached": false,
+      "prompt_reference_image_sha256": ""
     }
   },
   "progress": [
@@ -408,6 +444,46 @@
       "done": false,
       "error": "",
       "timestamp": "2026-04-29T11:39:30Z"
+    },
+    {
+      "step": "prompt_generation",
+      "message": "Completed prompt generation 7/14",
+      "progress": 61,
+      "current_slide": 7,
+      "total_slides": 14,
+      "done": false,
+      "error": "",
+      "timestamp": "2026-04-29T11:42:47Z"
+    },
+    {
+      "step": "prompt_generation",
+      "message": "Completed prompt generation 8/14",
+      "progress": 62,
+      "current_slide": 8,
+      "total_slides": 14,
+      "done": false,
+      "error": "",
+      "timestamp": "2026-04-29T11:47:02Z"
+    },
+    {
+      "step": "prompt_generation",
+      "message": "Completed prompt generation 9/14",
+      "progress": 63,
+      "current_slide": 9,
+      "total_slides": 14,
+      "done": false,
+      "error": "",
+      "timestamp": "2026-04-29T11:57:02Z"
+    },
+    {
+      "step": "prompt_generation",
+      "message": "Completed prompt generation 10/14",
+      "progress": 64,
+      "current_slide": 10,
+      "total_slides": 14,
+      "done": false,
+      "error": "",
+      "timestamp": "2026-04-29T12:01:15Z"
     }
   ],
   "artifacts": {

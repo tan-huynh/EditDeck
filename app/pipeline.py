@@ -359,9 +359,9 @@ class PPTImagePipeline:
             progress_callback(payload)
 
         try:
-            emit("prepare", "正在初始化模型配置...", 2)
+            emit("prepare", "Initializing model configuration...", 2)
 
-            emit("slide_count", "正在确定PPT页数...", 8)
+            emit("slide_count", "Determining slide count...", 8)
             resolved_slide_count = self._resolve_slide_count(
                 requirement,
                 slide_count,
@@ -422,7 +422,7 @@ class PPTImagePipeline:
             )
             emit(
                 "prompt_generation",
-                f"开始生成每页完整 Prompt，线程数：{prompt_workers}",
+                f"Generating complete prompts for each slide with {prompt_workers} workers",
                 52,
                 0,
                 total,
@@ -468,7 +468,7 @@ class PPTImagePipeline:
             logger.set_stage("image_generation", {"max_workers": workers, "total_slides": total})
             emit(
                 "image_generation",
-                f"开始并行生成图片，线程数：{workers}",
+                f"Generating images concurrently with {workers} workers",
                 72,
                 0,
                 total,
@@ -517,7 +517,7 @@ class PPTImagePipeline:
             pptx_url = ""
             resolved_pptx_path = ""
             if normalized_export_mode in {"ppt", "both"}:
-                emit("packaging", "正在打包PPT...", 95, total, total)
+                emit("packaging", "Packaging PPT...", 95, total, total)
                 self._build_pptx(results, run_dir, pptx_path)
                 pptx_url = f"/generated/{run_id}/{pptx_name}"
                 resolved_pptx_path = str(pptx_path.resolve())
@@ -547,7 +547,7 @@ class PPTImagePipeline:
                     "result_json": output.model_dump(),
                 },
             )
-            emit("completed", "生成完成", 100, total, total, True)
+            emit("completed", "Generation completed", 100, total, total, True)
             return output
         except Exception as exc:
             logger.finalize(
@@ -557,7 +557,7 @@ class PPTImagePipeline:
                     "traceback": traceback.format_exc(),
                 },
             )
-            emit("failed", f"生成失败：{exc}", 100, done=True, error=str(exc))
+            emit("failed", f"Generation failed: {exc}", 100, done=True, error=str(exc))
             raise
 
     def _render_one_slide(

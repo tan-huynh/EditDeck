@@ -33,21 +33,21 @@ const pptxLink = document.getElementById("pptx-link");
 const editableLink = document.getElementById("editable-link");
 
 const STEP_LABELS = {
-  queued: "排队中",
-  prepare: "准备中",
-  slide_count: "页数规划",
-  style: "风格生成",
-  outline: "大纲生成",
-  prompt_generation: "Prompt生成",
-  image_generation: "图片生成",
-  packaging: "PPT打包",
-  editable_prepare: "可编辑准备",
-  editable_assets: "素材匹配",
-  editable_codegen: "代码生成",
-  editable_render: "可编辑渲染",
-  editable_packaging: "可编辑打包",
-  completed: "已完成",
-  failed: "失败",
+  queued: "Queued",
+  prepare: "Preparing",
+  slide_count: "Planning slide count",
+  style: "Generating style",
+  outline: "Generating outline",
+  prompt_generation: "Generating prompts",
+  image_generation: "Generating images",
+  packaging: "Packaging PPT",
+  editable_prepare: "Preparing editable deck",
+  editable_assets: "Matching assets",
+  editable_codegen: "Generating editable code",
+  editable_render: "Rendering editable deck",
+  editable_packaging: "Packaging editable deck",
+  completed: "Completed",
+  failed: "Failed",
 };
 
 const MODEL_FIELDS = [
@@ -114,7 +114,7 @@ function setStatus(message, isError = false) {
 
 function resetProgress() {
   progressCard.classList.remove("hidden");
-  progressStep.textContent = "准备中...";
+  progressStep.textContent = "Preparing...";
   progressPercent.textContent = "0%";
   progressFill.style.width = "0%";
   progressDetail.textContent = "";
@@ -125,7 +125,7 @@ function resetProgress() {
 function updateProgress(job) {
   progressCard.classList.remove("hidden");
   const progress = Number(job.progress || 0);
-  progressStep.textContent = STEP_LABELS[job.step] || job.step || "处理中";
+  progressStep.textContent = STEP_LABELS[job.step] || job.step || "Processing";
   progressPercent.textContent = `${progress}%`;
   progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
   progressDetail.textContent = job.message || "";
@@ -133,7 +133,7 @@ function updateProgress(job) {
   const total = Number(job.total_slides || 0);
   if (total > 0) {
     progressSlide.classList.remove("hidden");
-    progressSlide.textContent = `进度：${current}/${total}`;
+    progressSlide.textContent = `Progress: ${current}/${total}`;
   } else {
     progressSlide.classList.add("hidden");
     progressSlide.textContent = "";
@@ -148,7 +148,7 @@ function readFileAsDataUrl(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve((reader.result || "").toString());
-    reader.onerror = () => reject(new Error("模板图读取失败，请重新选择文件。"));
+    reader.onerror = () => reject(new Error("Failed to read the style image. Please choose the file again."));
     reader.readAsDataURL(file);
   });
 }
@@ -182,7 +182,7 @@ function appendFields(formData, fieldNames) {
 function collectOutlineFromEditor() {
   const rows = Array.from(outlineEditor.querySelectorAll(".outline-item"));
   return rows.map((row, index) => {
-    const title = row.querySelector(".outline-title").value.trim() || `第${index + 1}页`;
+    const title = row.querySelector(".outline-title").value.trim() || `Slide ${index + 1}`;
     const pointsRaw = row.querySelector(".outline-points").value || "";
     const keyPoints = pointsRaw
       .split(/\r?\n/)
@@ -233,16 +233,16 @@ function renderOutlineEditor(outline = []) {
     item.dataset.page = String(slide.page || index + 1);
     item.innerHTML = `
       <div class="outline-head">
-        <span class="outline-index">第 ${index + 1} 页</span>
-        <button type="button" class="mini-btn move-up">上移</button>
-        <button type="button" class="mini-btn move-down">下移</button>
+        <span class="outline-index">Slide ${index + 1}</span>
+        <button type="button" class="mini-btn move-up">Move up</button>
+        <button type="button" class="mini-btn move-down">Move down</button>
       </div>
       <label>
-        标题
+        Title
         <input class="outline-title" type="text" value="${escapeHtml(slide.title || "")}" />
       </label>
       <label>
-        要点（每行一条）
+        Key points (one per line)
         <textarea class="outline-points" rows="4">${escapeHtml((slide.key_points || []).join("\n"))}</textarea>
       </label>
     `;
@@ -271,7 +271,7 @@ function moveOutlineItem(item, delta) {
 function renderOutlineIndex() {
   Array.from(outlineEditor.querySelectorAll(".outline-item")).forEach((item, idx) => {
     const label = item.querySelector(".outline-index");
-    label.textContent = `第 ${idx + 1} 页`;
+    label.textContent = `Slide ${idx + 1}`;
   });
 }
 
@@ -296,11 +296,11 @@ function renderSlides(slides = []) {
       <div class="slide-meta">
         <label class="slide-select">
           <input type="checkbox" data-page="${page}" ${checked} />
-          <span>选择第 ${page} 页</span>
+          <span>Select slide ${page}</span>
         </label>
-        <h3>${escapeHtml(slide.title || `第${page}页`)}</h3>
+        <h3>${escapeHtml(slide.title || `Slide ${page}`)}</h3>
         <details>
-          <summary>查看Prompt</summary>
+          <summary>View prompt</summary>
           <pre class="prompt">${escapeHtml(slide.prompt || "")}</pre>
         </details>
       </div>
@@ -322,7 +322,7 @@ function refreshSelectedCheckboxState() {
   });
 }
 
-function renderEditableCards(editableDeck, title = "可编辑结果") {
+function renderEditableCards(editableDeck, title = "Editable result") {
   if (!editableDeck || !editableDeck.slides || !editableDeck.slides.length) return false;
   const wrapper = document.createElement("section");
   wrapper.className = "editable-group";
@@ -336,12 +336,12 @@ function renderEditableCards(editableDeck, title = "可编辑结果") {
     card.className = "editable-card";
     const previewHtmlUrl = slide.preview_html_url || "";
     card.innerHTML = `
-      <h3>第 ${page} 页 | 剩余占位符 ${Number(slide.remaining_ph_count || 0)}</h3>
+      <h3>Slide ${page} | Remaining placeholders ${Number(slide.remaining_ph_count || 0)}</h3>
       <div class="editable-links">
-        ${previewHtmlUrl ? `<a href="${previewHtmlUrl}" target="_blank" rel="noopener">打开HTML预览</a>` : ""}
-        ${slide.preview_pptx_url ? `<a href="${slide.preview_pptx_url}" target="_blank" rel="noopener">下载该页PPT</a>` : ""}
+        ${previewHtmlUrl ? `<a href="${previewHtmlUrl}" target="_blank" rel="noopener">Open HTML preview</a>` : ""}
+        ${slide.preview_pptx_url ? `<a href="${slide.preview_pptx_url}" target="_blank" rel="noopener">Download this slide PPT</a>` : ""}
       </div>
-      ${previewHtmlUrl ? `<iframe class="editable-frame" loading="lazy" src="${previewHtmlUrl}"></iframe>` : "<p class='hint'>该页暂无可视化预览。</p>"}
+      ${previewHtmlUrl ? `<iframe class="editable-frame" loading="lazy" src="${previewHtmlUrl}"></iframe>` : "<p class='hint'>No visual preview is available for this slide yet.</p>"}
     `;
     wrapper.appendChild(card);
   });
@@ -380,10 +380,10 @@ function renderResult(payload) {
   editableGrid.innerHTML = "";
   let hasEditable = false;
   if (editableDeck) {
-    hasEditable = renderEditableCards(editableDeck, "完整可编辑PPT预览");
+    hasEditable = renderEditableCards(editableDeck, "Full editable PPT preview");
   }
   if (payload.partial_editable_deck) {
-    hasEditable = renderEditableCards(payload.partial_editable_deck, "选中页可编辑预览") || hasEditable;
+    hasEditable = renderEditableCards(payload.partial_editable_deck, "Selected slide editable preview") || hasEditable;
   }
   editablePreviewCard.classList.toggle("hidden", !hasEditable);
 }
@@ -394,7 +394,7 @@ async function pollJob(jobId) {
   while (token === state.pollToken) {
     const response = await fetch(`/api/generate/status/${jobId}`);
     if (!response.ok) {
-      throw new Error(`查询任务状态失败（HTTP ${response.status}）`);
+      throw new Error(`Failed to query job status (HTTP ${response.status})`);
     }
     const job = await response.json();
     updateProgress(job);
@@ -406,7 +406,7 @@ async function pollJob(jobId) {
       return;
     }
     if (job.state === "failed") {
-      throw new Error(job.error || job.message || "任务失败");
+      throw new Error(job.error || job.message || "Job failed");
     }
     await sleep(1000);
   }
@@ -423,7 +423,7 @@ async function runJobRequest(path, formData, startMessage) {
     });
     if (!response.ok) {
       const errJson = await response.json().catch(() => ({}));
-      throw new Error(errJson.detail || `请求失败（HTTP ${response.status}）`);
+      throw new Error(errJson.detail || `Request failed (HTTP ${response.status})`);
     }
     const startData = await response.json();
     const jobId = startData.job_id;
@@ -432,13 +432,13 @@ async function runJobRequest(path, formData, startMessage) {
       sessionIdInput.value = startData.session_id;
     }
     if (!jobId) {
-      throw new Error("后端未返回 job_id");
+      throw new Error("Backend did not return a job_id");
     }
-    setStatus(`任务已启动（job: ${jobId}）`);
+    setStatus(`Job started (job: ${jobId})`);
     await pollJob(jobId);
-    setStatus("任务完成");
+    setStatus("Job completed");
   } catch (error) {
-    setStatus(`任务失败：${error.message}`, true);
+    setStatus(`Job failed: ${error.message}`, true);
   } finally {
     setButtonsDisabled(false);
   }
@@ -446,12 +446,12 @@ async function runJobRequest(path, formData, startMessage) {
 
 async function saveSessionEdits(silent = false) {
   if (!state.sessionId) {
-    if (!silent) setStatus("请先创建会话（步骤1）。", true);
+    if (!silent) setStatus("Create a session first (step 1).", true);
     return false;
   }
   const outline = collectOutlineFromEditor();
   if (!outline.length) {
-    if (!silent) setStatus("当前大纲为空，无法保存。", true);
+    if (!silent) setStatus("The current outline is empty and cannot be saved.", true);
     return false;
   }
   const densityNode = form.querySelector('[name="information_density"]');
@@ -471,14 +471,14 @@ async function saveSessionEdits(silent = false) {
     });
     if (!response.ok) {
       const errJson = await response.json().catch(() => ({}));
-      throw new Error(errJson.detail || `保存失败（HTTP ${response.status}）`);
+      throw new Error(errJson.detail || `Save failed (HTTP ${response.status})`);
     }
     const payload = await response.json();
     renderResult(payload);
-    if (!silent) setStatus("风格和大纲已保存。");
+    if (!silent) setStatus("Style and outline saved.");
     return true;
   } catch (error) {
-    if (!silent) setStatus(`保存失败：${error.message}`, true);
+    if (!silent) setStatus(`Save failed: ${error.message}`, true);
     return false;
   }
 }
@@ -487,7 +487,7 @@ function validateStyleMutualExclusive() {
   const styleDesc = String(form.querySelector('[name="style_description"]').value || "").trim();
   const styleFile = form.querySelector('[name="style_template"]').files[0];
   if (styleDesc && styleFile && styleFile.size > 0) {
-    setStatus("风格描述与风格图片二选一，请删除其中一个。", true);
+    setStatus("Use either a style description or a style image, not both.", true);
     return false;
   }
   return true;
@@ -497,7 +497,7 @@ async function handlePrepare() {
   if (!validateStyleMutualExclusive()) return;
   const requirement = String(form.querySelector('[name="user_requirement"]').value || "").trim();
   if (!requirement) {
-    setStatus("请先填写需求描述。", true);
+    setStatus("Please enter a requirement first.", true);
     return;
   }
   const formData = new FormData();
@@ -520,7 +520,7 @@ async function handlePrepare() {
   appendFields(formData, MODEL_FIELDS);
 
   setButtonsDisabled(true);
-  setStatus("正在生成风格与大纲，请稍候...");
+  setStatus("Generating style and outline...");
   try {
     const response = await fetch("/api/workflow/prepare", {
       method: "POST",
@@ -528,13 +528,13 @@ async function handlePrepare() {
     });
     if (!response.ok) {
       const errJson = await response.json().catch(() => ({}));
-      throw new Error(errJson.detail || `准备失败（HTTP ${response.status}）`);
+      throw new Error(errJson.detail || `Preparation failed (HTTP ${response.status})`);
     }
     const payload = await response.json();
     renderResult(payload);
-    setStatus("风格与大纲已生成，可先人工编辑确认再渲染。");
+    setStatus("Style and outline generated. Review and edit them before rendering.");
   } catch (error) {
-    setStatus(`准备失败：${error.message}`, true);
+    setStatus(`Preparation failed: ${error.message}`, true);
   } finally {
     setButtonsDisabled(false);
   }
@@ -546,13 +546,13 @@ async function handleRenderAll() {
   const formData = new FormData();
   formData.set("session_id", state.sessionId);
   formData.set("export_mode", getCurrentExportMode());
-  await runJobRequest("/api/workflow/render/start", formData, "正在启动渲染任务...");
+  await runJobRequest("/api/workflow/render/start", formData, "Starting render job...");
 }
 
 async function handleRerenderSelected() {
   const pages = getSelectedPages();
   if (!pages.length) {
-    setStatus("请先勾选要重绘的页面。", true);
+    setStatus("Select the pages to redraw first.", true);
     return;
   }
   const ok = await saveSessionEdits(true);
@@ -561,12 +561,12 @@ async function handleRerenderSelected() {
   formData.set("session_id", state.sessionId);
   formData.set("pages", pages.join(","));
   formData.set("export_mode", getCurrentExportMode());
-  await runJobRequest("/api/workflow/slides/regenerate/start", formData, "正在重绘选中页面...");
+  await runJobRequest("/api/workflow/slides/regenerate/start", formData, "Redrawing selected pages...");
 }
 
 async function handleEditable(fullDeck = true) {
   if (!state.sessionId) {
-    setStatus("请先准备并渲染会话。", true);
+    setStatus("Prepare and render the session first.", true);
     return;
   }
   const formData = new FormData();
@@ -574,7 +574,7 @@ async function handleEditable(fullDeck = true) {
   if (!fullDeck) {
     const pages = getSelectedPages();
     if (!pages.length) {
-      setStatus("请先勾选要生成可编辑预览的页面。", true);
+      setStatus("Select pages before generating editable previews.", true);
       return;
     }
     formData.set("editable_pages", pages.join(","));
@@ -583,23 +583,23 @@ async function handleEditable(fullDeck = true) {
   await runJobRequest(
     "/api/workflow/editable/start",
     formData,
-    fullDeck ? "正在生成完整可编辑PPT..." : "正在生成选中页可编辑预览..."
+    fullDeck ? "Generating full editable PPT..." : "Generating selected slide editable previews..."
   );
 }
 
 async function handleReplica() {
   const files = Array.from(form.querySelector('[name="replica_images"]').files || []);
   if (!files.length) {
-    setStatus("请先上传复刻图片。", true);
+    setStatus("Upload replica images first.", true);
     return;
   }
   const formData = new FormData();
-  formData.set("deck_title", String(form.querySelector('[name="replica_deck_title"]').value || "").trim() || "图片复刻结果");
+  formData.set("deck_title", String(form.querySelector('[name="replica_deck_title"]').value || "").trim() || "Image replica result");
   formData.set("export_mode", form.querySelector('[name="export_mode"]').value || "both");
   formData.set("generate_editable_ppt", form.querySelector('[name="replica_generate_editable"]').value || "false");
   files.forEach((file) => formData.append("replica_images", file));
   appendFields(formData, EDITABLE_FIELDS);
-  await runJobRequest("/api/workflow/replica/start", formData, "正在启动图片复刻任务...");
+  await runJobRequest("/api/workflow/replica/start", formData, "Starting image replica job...");
 }
 
 async function loadDefaults() {
@@ -611,7 +611,7 @@ async function loadDefaults() {
     const payload = await response.json();
     defaultsText.textContent = JSON.stringify(payload, null, 2);
   } catch (error) {
-    defaultsText.textContent = `加载默认配置失败：${error.message}`;
+    defaultsText.textContent = `Failed to load default config: ${error.message}`;
   }
 }
 

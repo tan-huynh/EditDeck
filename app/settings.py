@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal, Optional
@@ -41,7 +42,7 @@ class EditableModelConfig(BaseModel):
 
 
 class ImageModelConfig(BaseModel):
-    provider: Literal["openai", "gemini", "http"] = "http"
+    provider: Literal["openai", "gemini", "http", "local"] = "http"
     base_url: str = "https://grsai.dakka.com.cn/v1/draw/completions"
     api_key: str = ""
     model: str = "nano-banana-pro"
@@ -276,4 +277,38 @@ def get_settings() -> Settings:
 
 
 def load_settings(config_file: Optional[str] = None) -> Settings:
-    return Settings.model_validate(_load_raw_config(config_file))
+    raw = _load_raw_config(config_file)
+    models = raw.setdefault("models", {})
+    text = models.setdefault("text", {})
+    image = models.setdefault("image", {})
+
+    text["provider"] = os.environ.get("EDITDECK_TEXT_PROVIDER", text.get("provider") or "openai")
+    text["base_url"] = os.environ.get("EDITDECK_TEXT_BASE_URL", text.get("base_url") or "http://127.0.0.1:11434/v1")
+    text["api_key"] = os.environ.get("EDITDECK_TEXT_API_KEY", text.get("api_key") or "ollama")
+    text["model"] = os.environ.get("EDITDECK_TEXT_MODEL", text.get("model") or "fredrezones55/Qwopus3.5:9b")
+
+    gemini_token = os.environ.get("EDITDECK_GEMINI_TOKEN", "").strip()
+    if os.environ.get("EDITDECK_IMAGE_PROVIDER"):
+        image["provider"] = os.environ["EDITDECK_IMAGE_PROVIDER"].strip()
+    elif gemini_token:
+        image["provider"] = "gemini"
+
+    if gemini_token and not image.get("api_key"):
+        image["api_key"] = gemini_token
+    if os.environ.get("EDITDECK_IMAGE_API_KEY"):
+        image["api_key"] = os.environ["EDITDECK_IMAGE_API_KEY"].strip()
+    if os.environ.get("EDITDECK_IMAGE_API_URL"):
+        image["base_url"] = os.environ["EDITDECK_IMAGE_API_URL"].strip()
+    elif image.get("provider") == "gemini":
+        image["base_url"] = "https://generativelanguage.googleapis.com/v1beta"
+    if os.environ.get("EDITDECK_IMAGE_MODEL"):
+        image["model"] = os.environ["EDITDECK_IMAGE_MODEL"].strip()
+    elif image.get("provider") == "gemini":
+        image["model"] = "gemini-2.5-flash-image"
+
+    if image.get("provider") == "local":
+        image["model"] = image.get("model") or "local-fallback"
+        image["base_url"] = image.get("base_url") or "local://fallback"
+        image["api_key"] = image.get("api_key") or ""
+
+    return Settings.model_validate(raw)
