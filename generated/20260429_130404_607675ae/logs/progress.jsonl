@@ -10,3 +10,5 @@
 {"step": "prompt_generation", "message": "Completed prompt generation 2/14", "progress": 54, "current_slide": 2, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:27:44Z"}
 {"step": "prompt_generation", "message": "Completed prompt generation 3/14", "progress": 55, "current_slide": 3, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:31:45Z"}
 {"step": "prompt_generation", "message": "Completed prompt generation 4/14", "progress": 57, "current_slide": 4, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:34:38Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 5/14", "progress": 58, "current_slide": 5, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:37:03Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 6/14", "progress": 59, "current_slide": 6, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:39:30Z"}
