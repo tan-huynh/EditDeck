@@ -199,12 +199,51 @@ def _start_heartbeat(
         while not stop_event.wait(interval_seconds):
             tick += 1
             progress = min(max_progress, start_progress + tick)
+            elapsed_seconds = int(tick * interval_seconds)
             _update_job(
                 job_id,
                 state="running",
                 step=step,
-                message=message,
+                message=f"{message} ({elapsed_seconds}s elapsed)",
                 progress=progress,
+            )
+
+    Thread(target=run, daemon=True).start()
+    return stop_event
+
+
+def _start_activity_heartbeat(
+    job_id: str,
+    *,
+    max_progress: int = 95,
+    interval_seconds: float = 5.0,
+) -> Event:
+    stop_event = Event()
+
+    def clean_message(value: Any) -> str:
+        message = str(value or "Processing...").strip() or "Processing..."
+        return re.sub(r"\s+\(\d+s elapsed\)$", "", message)
+
+    def run() -> None:
+        tick = 0
+        while not stop_event.wait(interval_seconds):
+            tick += 1
+            with JOBS_LOCK:
+                job = dict(JOBS.get(job_id) or {})
+            if job.get("state") != "running":
+                continue
+            progress = int(job.get("progress", 0) or 0)
+            if progress >= max_progress:
+                continue
+            elapsed_seconds = int(tick * interval_seconds)
+            _update_job(
+                job_id,
+                state="running",
+                step=job.get("step", "running"),
+                message=f"{clean_message(job.get('message'))} ({elapsed_seconds}s elapsed)",
+                progress=min(max_progress, progress + 1),
+                current_slide=job.get("current_slide", 0),
+                total_slides=job.get("total_slides", 0),
             )
 
     Thread(target=run, daemon=True).start()
@@ -339,6 +378,7 @@ def _run_generation_job(
     run_dir = Path(settings.output_root).expanduser().resolve() / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     _update_job(job_id, run_id=run_id, output_dir=str(run_dir))
+    activity_heartbeat = _start_activity_heartbeat(job_id)
 
     def on_progress(payload: dict[str, Any]) -> None:
         _update_job(
@@ -370,7 +410,7 @@ def _run_generation_job(
                     step="source_ingest",
                     message=f"Extracting and condensing {source_count} source file(s)...",
                     start_progress=2,
-                    max_progress=12,
+                    max_progress=35,
                     interval_seconds=2.0,
                 )
             prepared_requirement = source_processor.prepare_requirement(
@@ -438,6 +478,8 @@ def _run_generation_job(
             error=str(exc),
             result=None,
         )
+    finally:
+        activity_heartbeat.set()
 
 
 def _run_editable_job(job_id: str, run_id: str, editable_runtime_cfg) -> None:
