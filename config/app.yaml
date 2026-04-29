@@ -5,9 +5,9 @@ app:
 models:
   text:
     provider: openai
-    base_url: https://yunwu.ai/v1
-    api_key: ""
-    model: gpt-5.2-chat-latest
+    base_url: http://127.0.0.1:11434/v1
+    api_key: "ollama"
+    model: fredrezones55/Qwopus3.5:9b
 
   editable:
     provider: openai
@@ -25,9 +25,9 @@ models:
 
   image:
     provider: http
-    base_url: https://grsai.dakka.com.cn/v1/draw/nano-banana
+    base_url: local://fallback
     api_key: ""
-    model: nano-banana-pro
+    model: local-fallback
     size: 4K
     variants: 1
     timeout: 900
@@ -38,7 +38,7 @@ mineru:
   base_url: https://mineru.net/api/v4
   api_key: ""
   model_version: vlm
-  language: ch
+  language: en
   enable_formula: true
   enable_table: true
   is_ocr: true

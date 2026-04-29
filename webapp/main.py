@@ -31,7 +31,7 @@ STATIC_DIR = BASE_DIR / "static"
 
 app = FastAPI(
     title="One-Click PPT Generator",
-    description="生成 PPT 图片、普通 PPT，并支持转换为整套可编辑 PPT。",
+    description="Generate slide images, standard PPTX files, and editable PPTX decks.",
     version="0.5.0",
 )
 
@@ -65,9 +65,9 @@ def _parse_slide_count(slide_count_raw: Optional[str]) -> Optional[int]:
     try:
         value = int(raw)
     except ValueError as exc:
-        raise ValueError("slide_count 必须是整数或 auto。") from exc
+        raise ValueError("slide_count must be an integer or auto.") from exc
     if value < 1 or value > 20:
-        raise ValueError("slide_count 范围必须在 1-20。")
+        raise ValueError("slide_count must be between 1 and 20.")
     return value
 
 
@@ -76,7 +76,7 @@ def _parse_information_density(information_density_raw: Optional[str]) -> str:
     if not raw:
         raw = "medium"
     if raw not in {"auto", "low", "medium", "high", "extra"}:
-        raise ValueError("information_density 必须是 auto、low、medium、high 或 extra。")
+        raise ValueError("information_density must be one of: auto, low, medium, high, extra.")
     return raw
 
 
@@ -85,7 +85,7 @@ def _validate_style_inputs(
     style_bytes: Optional[bytes],
 ) -> None:
     if (style_description or "").strip() and style_bytes:
-        raise ValueError("风格描述与风格模板图互斥，请二选一。")
+        raise ValueError("Use either style_description or style_template, not both.")
 
 
 def _decode_style_template_base64(style_template_base64: Optional[str]) -> tuple[Optional[bytes], Optional[str]]:
@@ -95,19 +95,19 @@ def _decode_style_template_base64(style_template_base64: Optional[str]) -> tuple
 
     match = DATA_URL_RE.fullmatch(raw)
     if not match:
-        raise ValueError("style_template_base64 必须是 data:image/...;base64,... 格式。")
+        raise ValueError("style_template_base64 must use the data:image/...;base64,... format.")
 
     mime = match.group("mime").strip().lower()
     if not mime.startswith("image/"):
-        raise ValueError("style_template_base64 必须是图片 data URL。")
+        raise ValueError("style_template_base64 must be an image data URL.")
 
     try:
         data = base64.b64decode(match.group("data"), validate=True)
     except (ValueError, binascii.Error) as exc:
-        raise ValueError("style_template_base64 不是有效的 base64 图片数据。") from exc
+        raise ValueError("style_template_base64 is not valid base64 image data.") from exc
 
     if not data:
-        raise ValueError("style_template_base64 不能为空图片。")
+        raise ValueError("style_template_base64 cannot be an empty image.")
 
     return data, mime
 
@@ -145,7 +145,7 @@ def _update_job(job_id: str, **updates: Any) -> None:
         job["updated_at"] = _now_iso()
 
 
-def _create_job(initial_message: str = "任务已创建，等待执行...") -> str:
+def _create_job(initial_message: str = "Job created and waiting to run...") -> str:
     job_id = uuid4().hex
     now = _now_iso()
     with JOBS_LOCK:
@@ -306,7 +306,7 @@ def _run_generation_job(
     generate_editable_ppt: bool,
     editable_runtime_cfg,
 ) -> None:
-    _update_job(job_id, state="running", step="prepare", message="任务开始执行...", progress=1)
+    _update_job(job_id, state="running", step="prepare", message="Job started...", progress=1)
     run_id = generate_run_id()
     run_dir = Path(settings.output_root).expanduser().resolve() / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -317,7 +317,7 @@ def _run_generation_job(
             job_id,
             state="running",
             step=payload.get("step", "running"),
-            message=payload.get("message", "处理中..."),
+            message=payload.get("message", "Processing..."),
             progress=payload.get("progress", 0),
             current_slide=payload.get("current_slide", 0),
             total_slides=payload.get("total_slides", 0),
@@ -364,7 +364,7 @@ def _run_generation_job(
             job_id,
             state="done",
             step="completed",
-            message="生成完成",
+            message="Generation completed",
             progress=100,
             done=True,
             error="",
@@ -375,7 +375,7 @@ def _run_generation_job(
             job_id,
             state="failed",
             step="failed",
-            message=f"生成失败：{exc}",
+            message=f"Generation failed: {exc}",
             progress=100,
             done=True,
             error=str(exc),
@@ -384,14 +384,14 @@ def _run_generation_job(
 
 
 def _run_editable_job(job_id: str, run_id: str, editable_runtime_cfg) -> None:
-    _update_job(job_id, state="running", step="editable_prepare", message="开始转换可编辑 PPT...", progress=1)
+    _update_job(job_id, state="running", step="editable_prepare", message="Starting editable PPTX conversion...", progress=1)
 
     def on_progress(payload: dict[str, Any]) -> None:
         _update_job(
             job_id,
             state="running",
             step=payload.get("step", "running"),
-            message=payload.get("message", "处理中..."),
+            message=payload.get("message", "Processing..."),
             progress=payload.get("progress", 0),
             current_slide=payload.get("current_slide", 0),
             total_slides=payload.get("total_slides", 0),
@@ -411,7 +411,7 @@ def _run_editable_job(job_id: str, run_id: str, editable_runtime_cfg) -> None:
             job_id,
             state="done",
             step="completed",
-            message="可编辑 PPT 生成完成",
+            message="Editable PPTX generation completed",
             progress=100,
             done=True,
             error="",
@@ -422,7 +422,7 @@ def _run_editable_job(job_id: str, run_id: str, editable_runtime_cfg) -> None:
             job_id,
             state="failed",
             step="failed",
-            message=f"可编辑 PPT 生成失败：{exc}",
+            message=f"Editable PPTX generation failed: {exc}",
             progress=100,
             done=True,
             error=str(exc),
@@ -577,7 +577,7 @@ async def generate_sync(
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"生成失败：{exc}") from exc
+        raise HTTPException(status_code=500, detail=f"Generation failed: {exc}") from exc
     return result.model_dump()
 
 
@@ -711,7 +711,7 @@ async def generate_start(
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"任务启动失败：{exc}") from exc
+        raise HTTPException(status_code=500, detail=f"Failed to start job: {exc}") from exc
 
 
 @app.post("/api/editable/start")
@@ -771,7 +771,7 @@ async def editable_start(
             disable_asset_reuse=_parse_bool(disable_asset_reuse) if disable_asset_reuse is not None else None,
         )
         _resolve_run_dir(run_id)
-        job_id = _create_job(initial_message="可编辑 PPT 转换任务已创建，等待执行...")
+        job_id = _create_job(initial_message="Editable PPTX conversion job created and waiting to run...")
         thread = Thread(
             target=_run_editable_job,
             args=(job_id, run_id, editable_runtime_cfg),
@@ -784,7 +784,7 @@ async def editable_start(
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"任务启动失败：{exc}") from exc
+        raise HTTPException(status_code=500, detail=f"Failed to start job: {exc}") from exc
 
 
 @app.get("/api/generate/status/{job_id}")
@@ -964,9 +964,9 @@ def _parse_outline_json(outline_json: str, information_density: str) -> list[Sli
     slides: list[SlideOutline] = []
     for index, raw_slide in enumerate(slides_raw, start=1):
         item = raw_slide if isinstance(raw_slide, dict) else {}
-        title = str(item.get("title") or f"第{index}页").strip()
+        title = str(item.get("title") or f"Slide {index}").strip()
         if not title:
-            title = f"第{index}页"
+            title = f"Slide {index}"
         key_points = pipeline._normalize_outline_key_points(
             _parse_key_points(item.get("key_points")),
             normalized_density,
@@ -1040,7 +1040,7 @@ def _run_workflow_render_job(
         job_id,
         state="running",
         step="prepare",
-        message="正在准备渲染任务...",
+        message="Preparing render job...",
         progress=2,
         current_slide=0,
         total_slides=0,
@@ -1051,20 +1051,20 @@ def _run_workflow_render_job(
         session = _session_snapshot(session_id)
         runtime_cfg: RuntimeConfig = session["runtime_cfg"]
         if runtime_cfg is None:
-            raise ValueError("当前会话不支持文本生成渲染，请使用图片复刻模式。")
+            raise ValueError("This session does not support text-generation rendering. Use image replica mode instead.")
         requirement = str(session.get("prepared_requirement", "")).strip()
-        deck_title = str(session.get("deck_title", "")).strip() or "自动生成PPT"
+        deck_title = str(session.get("deck_title", "")).strip() or "Generated deck"
         style_prompt = str(session.get("style_prompt", "")).strip()
         information_density = _parse_information_density(session.get("information_density", "medium"))
         outline = [SlideOutline.model_validate(item) for item in session.get("outline", [])]
         if not outline:
-            raise ValueError("当前会话没有可用大纲，请先完成步骤1。")
+            raise ValueError("This session has no outline. Complete step 1 first.")
         page_map = {slide.page: slide for slide in outline}
 
         target_pages = selected_pages or [slide.page for slide in outline]
         for page in target_pages:
             if page not in page_map:
-                raise ValueError(f"page {page} 不在当前大纲范围内。")
+                raise ValueError(f"page {page} is not part of the current outline.")
 
         run_id = str(session.get("run_id") or "").strip() or _new_run_id()
         run_dir = _ensure_run_dir(run_id)
@@ -1088,7 +1088,7 @@ def _run_workflow_render_job(
             job_id,
             state="running",
             step="prompt_generation",
-            message="正在生成逐页渲染 Prompt...",
+            message="Generating per-slide render prompts...",
             progress=8,
             current_slide=0,
             total_slides=total_pages,
@@ -1115,7 +1115,7 @@ def _run_workflow_render_job(
                 job_id,
                 state="running",
                 step="prompt_generation",
-                message=f"Prompt 已完成 {index}/{total_pages}",
+                        message=f"Prompts completed {index}/{total_pages}",
                 progress=8 + int((index / max(1, total_pages)) * 24),
                 current_slide=index,
                 total_slides=total_pages,
@@ -1128,7 +1128,7 @@ def _run_workflow_render_job(
             job_id,
             state="running",
             step="image_generation",
-            message=f"正在并发生成图片（{workers} 线程）...",
+            message=f"Generating images concurrently ({workers} workers)...",
             progress=35,
             current_slide=0,
             total_slides=total_pages,
@@ -1172,7 +1172,7 @@ def _run_workflow_render_job(
                         job_id,
                         state="running",
                         step="image_generation",
-                        message=f"页面已生成 {completed}/{total_pages}",
+                        message=f"Slides generated {completed}/{total_pages}",
                         progress=35 + int((completed / max(1, total_pages)) * 55),
                         current_slide=completed,
                         total_slides=total_pages,
@@ -1198,7 +1198,7 @@ def _run_workflow_render_job(
                 job_id,
                 state="running",
                 step="packaging",
-                message="正在打包PPT...",
+                message="Packaging PPTX...",
                 progress=94,
                 current_slide=total_pages,
                 total_slides=total_pages,
@@ -1230,7 +1230,7 @@ def _run_workflow_render_job(
             job_id,
             state="done",
             step="completed",
-            message="渲染完成",
+            message="Rendering completed",
             progress=100,
             current_slide=total_pages,
             total_slides=total_pages,
@@ -1244,7 +1244,7 @@ def _run_workflow_render_job(
             job_id,
             state="failed",
             step="failed",
-            message=f"渲染失败：{exc}",
+            message=f"Rendering failed: {exc}",
             progress=100,
             done=True,
             error=str(exc),
@@ -1263,7 +1263,7 @@ def _run_workflow_editable_job(
         job_id,
         state="running",
         step="editable_prepare",
-        message="正在准备可编辑PPT任务...",
+        message="Preparing editable PPTX job...",
         progress=3,
         current_slide=0,
         total_slides=0,
@@ -1274,7 +1274,7 @@ def _run_workflow_editable_job(
         session = _session_snapshot(session_id)
         run_id = str(session.get("run_id", "")).strip()
         if not run_id:
-            raise ValueError("当前会话尚未生成图片，无法转换可编辑PPT。")
+            raise ValueError("This session has no generated images yet, so it cannot be converted to editable PPTX.")
         run_dir = _resolve_run_dir(run_id)
 
         def on_progress(payload: dict[str, Any]) -> None:
@@ -1283,7 +1283,7 @@ def _run_workflow_editable_job(
                 job_id,
                 state="running",
                 step=payload.get("step", "running"),
-                message=payload.get("message", "处理中..."),
+                message=payload.get("message", "Processing..."),
                 progress=payload.get("progress", 0),
                 current_slide=payload.get("current_slide", 0),
                 total_slides=payload.get("total_slides", 0),
@@ -1297,7 +1297,7 @@ def _run_workflow_editable_job(
             for page in selected_pages:
                 matches = sorted(run_dir.glob(f"slide_{page:02d}.*"))
                 if not matches:
-                    raise ValueError(f"未找到第 {page} 页图片，请先生成该页。")
+                    raise ValueError(f"Could not find the image for slide {page}. Generate that slide first.")
                 slide_images.append(matches[0])
             output_dir = run_dir / f"editable_partial_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             editable_result = editable_pipeline.run_from_images(
@@ -1313,7 +1313,7 @@ def _run_workflow_editable_job(
                 job_id,
                 state="done",
                 step="completed",
-                message="选中页可编辑预览生成完成",
+                message="Editable preview for selected slides completed",
                 progress=100,
                 done=True,
                 error="",
@@ -1335,7 +1335,7 @@ def _run_workflow_editable_job(
             job_id,
             state="done",
             step="completed",
-            message="可编辑PPT已完成",
+            message="Editable PPTX completed",
             progress=100,
             done=True,
             error="",
@@ -1347,7 +1347,7 @@ def _run_workflow_editable_job(
             job_id,
             state="failed",
             step="failed",
-            message=f"可编辑PPT失败：{exc}",
+            message=f"Editable PPTX failed: {exc}",
             progress=100,
             done=True,
             error=str(exc),
@@ -1368,7 +1368,7 @@ def _run_replica_job(
         job_id,
         state="running",
         step="prepare",
-        message="正在准备图片复刻任务...",
+        message="Preparing image replica job...",
         progress=3,
         current_slide=0,
         total_slides=len(replica_images),
@@ -1390,11 +1390,11 @@ def _run_replica_job(
             target_name = f"slide_{index:02d}{suffix}"
             target_path = run_dir / target_name
             target_path.write_bytes(image["data"])
-            title = f"第{index}页"
+            title = f"Slide {index}"
             slide = SlideResult(
                 page=index,
                 title=title,
-                prompt="图片复刻",
+                prompt="Image replica",
                 image_url=f"/generated/{run_id}/{target_name}",
                 image_path=str(target_path.resolve()),
             )
@@ -1420,7 +1420,7 @@ def _run_replica_job(
                 job_id,
                 state="running",
                 step="image_generation",
-                message=f"已写入图片 {index}/{total}",
+                message=f"Images written {index}/{total}",
                 progress=5 + int((index / max(1, total)) * 55),
                 current_slide=index,
                 total_slides=total,
@@ -1434,7 +1434,7 @@ def _run_replica_job(
                 job_id,
                 state="running",
                 step="packaging",
-                message="正在打包PPT...",
+                message="Packaging PPTX...",
                 progress=70,
                 current_slide=total,
                 total_slides=total,
@@ -1455,7 +1455,7 @@ def _run_replica_job(
                     job_id,
                     state="running",
                     step=payload.get("step", "running"),
-                    message=payload.get("message", "处理中..."),
+                    message=payload.get("message", "Processing..."),
                     progress=70 + int((payload.get("progress", 0) / 100) * 30),
                     current_slide=payload.get("current_slide", 0),
                     total_slides=payload.get("total_slides", total),
@@ -1477,7 +1477,7 @@ def _run_replica_job(
             job_id,
             state="done",
             step="completed",
-            message="图片复刻完成",
+            message="Image replica completed",
             progress=100,
             current_slide=total,
             total_slides=total,
@@ -1491,7 +1491,7 @@ def _run_replica_job(
             job_id,
             state="failed",
             step="failed",
-            message=f"图片复刻失败：{exc}",
+            message=f"Image replica failed: {exc}",
             progress=100,
             done=True,
             error=str(exc),
@@ -1675,7 +1675,7 @@ def workflow_session_update(
         session = _session_snapshot(session_id)
         updates: dict[str, Any] = {}
         if deck_title is not None:
-            updates["deck_title"] = (deck_title or "").strip() or "自动生成PPT"
+            updates["deck_title"] = (deck_title or "").strip() or "Generated deck"
         if style_prompt is not None:
             cleaned_style_prompt = (style_prompt or "").strip()
             if not cleaned_style_prompt:
@@ -1710,7 +1710,7 @@ def workflow_render_start(
         _session_snapshot(session_id)
         resolved_export_mode = _parse_export_mode(export_mode)
         pages = _parse_pages(render_pages)
-        job_id = _create_job(initial_message="渲染任务已创建，等待执行...")
+        job_id = _create_job(initial_message="Render job created and waiting to run...")
         thread = Thread(
             target=_run_workflow_render_job,
             kwargs={
@@ -1740,7 +1740,7 @@ def workflow_regenerate_start(
     try:
         resolved_pages = _parse_pages(pages)
         if not resolved_pages:
-            raise ValueError("请至少指定一页进行重绘。")
+            raise ValueError("Specify at least one slide to re-render.")
         return workflow_render_start(session_id=session_id, export_mode=export_mode, render_pages=json.dumps(resolved_pages))
     except HTTPException:
         raise
@@ -1807,7 +1807,7 @@ def workflow_editable_start(
             disable_asset_reuse=_parse_bool(disable_asset_reuse) if disable_asset_reuse is not None else None,
         )
         selected_pages = _parse_pages(editable_pages)
-        job_id = _create_job(initial_message="可编辑PPT任务已创建，等待执行...")
+        job_id = _create_job(initial_message="Editable PPTX job created and waiting to run...")
         thread = Thread(
             target=_run_workflow_editable_job,
             kwargs={
@@ -1830,7 +1830,7 @@ def workflow_editable_start(
 
 @app.post("/api/workflow/replica/start")
 async def workflow_replica_start(
-    deck_title: Optional[str] = Form(default="图片复刻结果"),
+    deck_title: Optional[str] = Form(default="Replicated slide deck"),
     export_mode: Optional[str] = Form(default="both"),
     generate_editable_ppt: Optional[str] = Form(default="false"),
     replica_images: list[UploadFile] = File(...),
@@ -1860,16 +1860,16 @@ async def workflow_replica_start(
 ) -> dict[str, Any]:
     try:
         if not replica_images:
-            raise ValueError("请至少上传一张用于复刻的图片。")
+            raise ValueError("Upload at least one image for replica mode.")
         if len(replica_images) > 20:
-            raise ValueError("复刻模式最多支持20张图片。")
+            raise ValueError("Replica mode supports at most 20 images.")
         resolved_export_mode = _parse_export_mode(export_mode)
         replica_payloads: list[dict[str, Any]] = []
         for upload in replica_images:
             name = (upload.filename or "").strip() or "slide"
             suffix = Path(name).suffix.lower() or ".png"
             if suffix not in SUPPORTED_REPLICA_SUFFIXES:
-                raise ValueError(f"不支持文件类型：{name}")
+                raise ValueError(f"Unsupported file type: {name}")
             replica_payloads.append(
                 {
                     "name": name,
@@ -1919,7 +1919,7 @@ async def workflow_replica_start(
                 "source_runtime_cfg": None,
                 "style_template_bytes": None,
                 "style_template_mime": None,
-                "deck_title": (deck_title or "").strip() or "图片复刻结果",
+                "deck_title": (deck_title or "").strip() or "Replicated slide deck",
                 "style_prompt": "",
                 "information_density": "medium",
                 "outline": [],
@@ -1933,7 +1933,7 @@ async def workflow_replica_start(
             }
         )
 
-        job_id = _create_job(initial_message="图片复刻任务已创建，等待执行...")
+        job_id = _create_job(initial_message="Image replica job created and waiting to run...")
         thread = Thread(
             target=_run_replica_job,
             kwargs={

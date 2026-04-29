@@ -1,0 +1,6 @@
+2026-04-29 13:04:04,677 INFO app.source_ingest: source_ingest_log_path path=/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/source_ingest.log
+2026-04-29 13:04:04,677 INFO app.source_ingest: source_ingest_start files=1
+2026-04-29 13:04:04,678 INFO app.source_ingest: source_file_start index=1 name=Huynh_Preliminary_Research_Outline.md size_bytes=30169
+2026-04-29 13:04:04,679 INFO app.source_ingest: extract_start name=Huynh_Preliminary_Research_Outline.md suffix=.md path=/var/folders/gl/6q6t3ks13r1f6f39bp9krv8w0000gn/T/editdeck_sources_ux5ylomn/source_01/Huynh_Preliminary_Research_Outline.md
+2026-04-29 13:04:04,679 INFO app.source_ingest: extract_ok name=Huynh_Preliminary_Research_Outline.md suffix=.md method=plain_text chars=29381
+2026-04-29 13:04:04,679 INFO app.source_ingest: source_file_done index=1 name=Huynh_Preliminary_Research_Outline.md method=plain_text chars=29381

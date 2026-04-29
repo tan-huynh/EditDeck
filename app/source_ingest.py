@@ -642,7 +642,7 @@ class SourceDocumentProcessor:
 }}
 
 要求：
-1. final_requirement 使用中文，面向后续 PPT 生成模型，必须保留用户明确提出的目标、受众、语气、页数偏好或重点要求。
+1. final_requirement must be in English, oriented towards downstream PPT generation models, preserving user goals, audiences, tones, and specific requests.
 2. 你要主动吸收文件中的主题、章节结构、关键事实、数据结论、方案步骤、案例信息和专业术语，但不要原样堆砌全文。
 3. final_requirement 应该像一份完整的 PPT 任务说明，既有主题，也有建议覆盖的核心内容范围。
 4. 如果文件内容与用户一句话有冲突，以用户明确要求为最高优先级。
@@ -725,7 +725,7 @@ class SourceDocumentProcessor:
 3. 如果 useful=true，refined_text 必须提炼成适合 PPT 使用的关键信息摘要，而不是原文复读。
 4. refined_text 要优先保留：主题、背景、问题、目标、结论、数据、方法、步骤、对比、案例、建议、专业术语。
 5. refined_text 必须尊重用户当前需求，不能把文档主题带偏；如果与用户要求冲突，按用户要求取舍。
-6. refined_text 使用中文，优先简洁但不能为了压缩长度丢失关键事实、数据、结论或步骤；通常控制在 {MAX_REFINED_CHUNK_CHARS} 字以内，必要时可以略微超出。
+6. refined_text must be in English, preferably concise, but never lose critical facts, data, conclusions, or steps. Typically around {MAX_REFINED_CHUNK_CHARS} characters, slightly more if necessary.
 7. 如果 useful=false，refined_text 返回空字符串。
 8. 不要输出 markdown，不要解释。
 

@@ -241,19 +241,19 @@ class PPTImagePipeline:
         )
         if cfg.text_provider not in {"openai", "gemini"}:
             raise ValueError("Text provider must be `openai` or `gemini`.")
-        if cfg.image_provider not in {"openai", "gemini", "http"}:
-            raise ValueError("Image provider must be `openai`, `gemini`, or `http`.")
+        if cfg.image_provider not in {"openai", "gemini", "http", "local"}:
+            raise ValueError("Image provider must be `openai`, `gemini`, `http`, or `local`.")
         if not cfg.text_base_url:
             raise ValueError("Text model base_url cannot be empty.")
-        if not cfg.image_base_url:
+        if cfg.image_provider != "local" and not cfg.image_base_url:
             raise ValueError("Image model base_url cannot be empty.")
         if not cfg.text_api_key:
             raise ValueError("Text model api_key cannot be empty.")
-        if not cfg.image_api_key:
+        if cfg.image_provider != "local" and not cfg.image_api_key:
             raise ValueError("Image model api_key cannot be empty.")
         if not cfg.text_model:
             raise ValueError("Text model cannot be empty.")
-        if not cfg.image_model:
+        if cfg.image_provider != "local" and not cfg.image_model:
             raise ValueError("Image model cannot be empty.")
         return cfg
 
@@ -700,7 +700,7 @@ JSON schema（严格）：
 硬性要求：
 1. slides 数量必须严格等于 {slide_count}。
 2. page 必须从 1 连续递增到 {slide_count}。
-3. 所有 deck 内可见内容必须使用简体中文。
+3. All visible content in the deck must use English.
 4. 每页 title 必须短、强、有区分度，不要重复表达。
 {density_requirement}
 6. 每条 key_point 必须把“这一点具体要讲什么”说清楚，可以是短句，也可以稍长，但不能只写一个空泛词语。
@@ -869,7 +869,7 @@ JSON schema（严格）：
     def _ensure_prompt_density_guidance(self, prompt: str, information_density: str) -> str:
         normalized_prompt = (prompt or "").strip()
         if not normalized_prompt:
-            normalized_prompt = "完整宽屏中文 PPT 单页。"
+            normalized_prompt = "Complete widescreen English PPT slide."
         if self._normalize_information_density(information_density) == AUTO_INFORMATION_DENSITY:
             return normalized_prompt
         if "本页信息密度辅助约束：" in normalized_prompt or "信息密度控制：" in normalized_prompt:
@@ -942,7 +942,7 @@ JSON schema（严格）：
 5. 明确说明哪些是整套 PPT 中必须始终保持一致的视觉特征，哪些只能做有限变化。
 6. 不要把重点放在某一页的业务内容上，而要抽取跨页复用的视觉规则。
 7. 不要输出 PPT 生成参数或技术指令，例如宽高比、分辨率、像素、seed、steps、CFG、输出格式、模型参数等。
-8. 输出语言必须是中文。
+8. The output language must be English.
 9. 输出格式不做限制，不必按固定栏目组织，你可以用最适合复现风格的方式自由详细描述。
 10. 不要解释分析过程，直接给出最终风格描述。
 
@@ -1004,7 +1004,7 @@ JSON schema（严格）：
             mime = style_template_mime or "image/png"
             data_url = self._image_bytes_to_data_url(style_template_bytes, mime) or ""
             user_prompt = f"""
-你是高级视觉分析师。请分析这张 PPT 风格模板图，并输出一段超详细、可复用、可直接用于整套 PPT 统一视觉的中文风格说明。
+You are a senior visual analyst. Please analyze this PPT style template image, and output an ultra-detailed, reusable English style description that can be used directly for a unified visual design.
 
 要求：
 1. 不设字数上限，请尽可能详细、具体、充分。
@@ -1014,7 +1014,7 @@ JSON schema（严格）：
 5. 请特别指出哪些视觉特征是这套风格最不可丢失的核心特征，哪些变化会破坏一致性。
 6. 你要总结的是整套 PPT 可以复用的视觉 DNA，而不是对单页内容主题做解释。
 7. 不要输出 PPT 生成参数或技术指令，例如宽高比、分辨率、像素、seed、steps、CFG、输出格式、模型参数等。
-8. 输出语言必须是中文。
+8. Output language must be English.
 9. 请尽可能写得更长、更细，不要遗漏任何会影响风格复现的重要细节。
 10. 不要解释你的思考过程，直接给出最终风格描述。
 """.strip()
@@ -1104,12 +1104,12 @@ JSON schema（严格）：
     ) -> str:
         user_prompt = f"""
 你是顶级演示视觉策略顾问。当前没有用户提供的风格描述，也没有风格参考图。
-请你根据“用户需求本身”反推一套最合适的整套 PPT 视觉风格 DNA，并输出一段超详细、可复用、可直接用于后续所有页面统一出图的中文风格说明。
+Please infer the most suitable unified PPT visual style DNA based on the "user requirement" itself, and output an ultra-detailed, reusable English style description.
 
 你的任务不是复述业务内容，而是先理解需求中的行业属性、受众身份、汇报场景、表达目标、信息密度、说服方式，再为这份 PPT 设计一套匹配的视觉系统。
 
 要求：
-1. 输出必须是中文。
+1. Output must be in English.
 2. 不设字数上限，请尽可能长、尽可能完整、尽可能具体、尽可能细致。
 3. 必须从需求里主动判断并明确风格方向，例如更偏董事会汇报、科研汇报、产业方案、政企汇报、技术架构说明、品牌提案、教育培训、医疗说明等，但不要把它写成一句抽象判断，要把这种判断落实为视觉规则。
 4. 重点描述整套 PPT 跨页复用的非内容风格规则，而不是某一页的具体业务文案。
@@ -1453,7 +1453,7 @@ When conflict occurs, preserve readability, hierarchy, and business clarity firs
 5. 必须把各个模块之间的相对位置、大小关系、对齐关系、主次层级、视觉流向写清楚，避免只给抽象概述。
 6. 对每个关键区块，尽量写清楚它承载什么信息、长什么样、如何与周围元素连接，而不是只说“放一个模块”。
 7. 必须严格继承给定风格 DNA，但要转化为当前页可执行的画面描述，不要机械照抄整段风格文本。
-8. 所有需要出现在页内的文字都必须是简体中文，并且内容要与当前页主题一致。
+8. All literal text content to be displayed on the page must be in English.
 9. 结果必须像完整宽屏 PPT 单页，能够完整承载页面结构与信息层级，而不是只呈现局部元素或缺少页面整体骨架。
 10. 不要输出分辨率、像素、seed、steps、CFG、模型参数、输出格式等技术参数。
 11. 如果当前页包含数据、流程、对比、时间线或分层结构，要在 prompt 中明确相应的信息图表达方式。
@@ -1626,7 +1626,7 @@ Key points:
 同时执行以下母版锁定约束：
 {master_lock_guidance}
 
-在这段完整提示词里，你要像写一份逐层施工说明一样，从整页的顶部到底部、从左到右，把所有重要的可见元素和布局关系都写清楚，不要省略关键视觉决策。要明确交代整页是完整宽屏 PPT 页面，能够完整承载页面结构与信息层级；所有页面内实际出现的文字都必须是简体中文；要完整保留本页标题和核心要点，不能遗漏内容模块。请把版头、标题区、副标题或说明文字、主体信息区、卡片或模块、图表或信息图、标签、连接线、箭头、边框、图标、辅助说明区、页码区、背景处理、强调色位置、阴影与材质感这些元素尽可能详细地描述出来，并且写清楚它们之间的相对位置、大小关系、对齐关系、主次层级、节奏变化和视觉流向，不要只给抽象概括，也不要简单说“放一个模块”。
+在这段完整提示词里，你要像写一份逐层施工说明一样，从整页的顶部到底部、从左到右，把所有重要的可见元素和布局关系都写清楚，不要省略关键视觉决策。要明确交代整页是完整宽屏 PPT 页面，能够完整承载页面结构与信息层级；所有页面内实际出现的文字都必须是English；要完整保留本页标题和核心要点，不能遗漏内容模块。请把版头、标题区、副标题或说明文字、主体信息区、卡片或模块、图表或信息图、标签、连接线、箭头、边框、图标、辅助说明区、页码区、背景处理、强调色位置、阴影与材质感这些元素尽可能详细地描述出来，并且写清楚它们之间的相对位置、大小关系、对齐关系、主次层级、节奏变化和视觉流向，不要只给抽象概括，也不要简单说“放一个模块”。
 
 这段提示词还必须充分说明排版气质和图解逻辑，包括页面骨架、留白方式、模块密度、信息分层、阅读动线、视觉锚点、对比关系、图解组织方式、卡片或容器处理、边框粗细倾向、分隔条样式、箭头语言、标签语法、图标风格、图表外观、光影和材质控制方式。要特别强调页面需要保持专业、清晰、适合正式汇报，整体可读性强，标题醒目，正文与标签自然，数字或重点结论有明确强调。如果本页天然适合流程图、对比图、分层图、时间线、矩阵图、结构图或指标模块，就要把相应的信息图表达方式写具体，而不是一句带过。整页视觉必须和整套 PPT 保持同一视觉家族，背景系统、色彩关系、卡片样式、边框语言、阴影质感、图标体系、图表语言、材质感和渲染气质都不能漂移；如果风格 DNA 本身暗示的是高密度技术图解、工程结构图、科研汇报式页面，或者更强装饰性、插画性、漫画性、拼贴性、极简性等鲜明表达，都应在一致性的前提下忠实延续，而不是被预设审美偏好改写。
 
@@ -1672,6 +1672,15 @@ Key points:
                 image_api_url=runtime_cfg.image_base_url,
                 image_api_key=runtime_cfg.image_api_key,
                 image_model=runtime_cfg.image_model,
+                prompt=augmented_prompt,
+                output_path=output_path,
+                slide_page=slide_page,
+                logger=logger,
+            )
+            return
+
+        if image_provider == "local":
+            self._generate_local_slide_image(
                 prompt=augmented_prompt,
                 output_path=output_path,
                 slide_page=slide_page,
@@ -1949,6 +1958,82 @@ Key points:
             "byte_length": len(image_bytes),
         }
         return image_bytes, summary
+
+    def _generate_local_slide_image(
+        self,
+        *,
+        prompt: str,
+        output_path: Path,
+        slide_page: Optional[int],
+        logger: Optional[GenerationLogger],
+    ) -> None:
+        try:
+            from PIL import Image, ImageDraw, ImageFont  # type: ignore
+        except Exception as exc:
+            raise RuntimeError("Local image provider requires Pillow.") from exc
+
+        width, height = 1920, 1080
+        image = Image.new("RGB", (width, height), "#f8fafc")
+        draw = ImageDraw.Draw(image)
+
+        try:
+            title_font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial Bold.ttf", 56)
+            body_font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 34)
+            small_font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 24)
+        except Exception:
+            title_font = ImageFont.load_default()
+            body_font = ImageFont.load_default()
+            small_font = ImageFont.load_default()
+
+        draw.rectangle((0, 0, width, 120), fill="#0f172a")
+        draw.rectangle((0, 120, width, 128), fill="#2563eb")
+        draw.text((88, 36), f"EditDeck Local Slide {slide_page or ''}".strip(), fill="#ffffff", font=title_font)
+
+        excerpt = re.sub(r"\s+", " ", prompt or "").strip()
+        if len(excerpt) > 1600:
+            excerpt = excerpt[:1600].rsplit(" ", 1)[0] + "..."
+
+        lines: list[str] = []
+        current = ""
+        max_chars = 76
+        for word in excerpt.split(" "):
+            candidate = f"{current} {word}".strip()
+            if len(candidate) > max_chars and current:
+                lines.append(current)
+                current = word
+            else:
+                current = candidate
+        if current:
+            lines.append(current)
+
+        y = 190
+        draw.text((92, y), "Generated from document context", fill="#2563eb", font=body_font)
+        y += 70
+        for line in lines[:15]:
+            draw.text((116, y), line, fill="#1e293b", font=body_font)
+            y += 50
+
+        draw.rounded_rectangle((92, 930, width - 92, 1000), radius=18, outline="#cbd5e1", width=2, fill="#ffffff")
+        draw.text(
+            (122, 950),
+            "Local fallback renderer is active. Configure a real image provider for production-quality slide visuals.",
+            fill="#64748b",
+            font=small_font,
+        )
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        image.save(output_path)
+        if logger and slide_page is not None:
+            logger.append_slide_event(
+                slide_page,
+                "image_attempts",
+                {
+                    "attempt": 1,
+                    "success": True,
+                    "provider": "local",
+                    "note": "Generated by local fallback renderer.",
+                },
+            )
 
     def _build_pptx(self, slide_results: list[SlideResult], run_dir: Path, output_path: Path) -> None:
         prs = Presentation()
