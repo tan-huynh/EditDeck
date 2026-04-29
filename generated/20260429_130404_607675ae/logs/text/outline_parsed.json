@@ -1,0 +1,131 @@
+{
+  "deck_title": "Robust and Reproducible Evaluation of Error-Rate Control in High-Dimensional Discrete and Heterogeneous Data",
+  "slides": [
+    {
+      "page": 1,
+      "title": "Presentation Overview and Research Scope",
+      "key_points": [
+        "Introduce the intersection of high-dimensional statistics and discrete data analysis in modern bioinformatics。",
+        "State the objective to establish reproducible evaluation frameworks for error-rate control。",
+        "Outline the presentation structure covering methodology, comparison, and application domains。"
+      ]
+    },
+    {
+      "page": 2,
+      "title": "Multiple Testing Challenges in High-Dimensional Settings",
+      "key_points": [
+        "Explain the proliferation of hypothesis testing in genomic and omics data science。",
+        "Identify limitations of classical multiple testing methods when applied to discrete and heterogeneous data。",
+        "Articulate the reproducibility crisis in statistical methodology and its impact on scientific conclusions。"
+      ]
+    },
+    {
+      "page": 3,
+      "title": "Characteristics of Discrete and Heterogeneous Data",
+      "key_points": [
+        "Describe zero-inflated and over-dispersed distributions common in RNA-seq and NGS data。",
+        "Explain heterogeneity across experimental conditions, platforms, and batch effects。",
+        "Note computational constraints in high-dimensional settings with discrete features。"
+      ]
+    },
+    {
+      "page": 4,
+      "title": "The Multiple Testing Problem in Genomics",
+      "key_points": [
+        "Discuss Bonferroni correction limitations in controlling family-wise error rates for large-scale testing。",
+        "Explain why false discovery rate control is preferred for high-dimensional genomic applications。",
+        "Identify specific challenges with discrete count data and integer-valued distributions。"
+      ]
+    },
+    {
+      "page": 5,
+      "title": "Proposed Methodological Framework",
+      "key_points": [
+        "Outline the hierarchical approach to error control integrating discrete-aware and heterogeneous procedures。",
+        "Describe the simulation framework for validation and reproducibility。",
+        "Specify the R-based implementation strategy for reproducible research。"
+      ]
+    },
+    {
+      "page": 6,
+      "title": "False Discovery Rate Control Fundamentals",
+      "key_points": [
+        "Define FDR as the expected proportion of false positives among rejected hypotheses。",
+        "Explain the Benjamini-Hochberg procedure's theoretical properties under independence assumptions。",
+        "Discuss assumptions and limitations underlying standard FDR control methods。"
+      ]
+    },
+    {
+      "page": 7,
+      "title": "False Discovery Exceedance Analysis",
+      "key_points": [
+        "Introduce FDX as a measure of worst-case error rates for risk-averse applications。",
+        "Explain how FDX complements FDR in comprehensive error assessment frameworks。",
+        "Describe the relationship between FDX and permutation-based false discovery control。"
+      ]
+    },
+    {
+      "page": 8,
+      "title": "Discrete-Aware Testing Procedures",
+      "key_points": [
+        "Explain why integer-valued data requires specialized testing methods beyond continuous approximations。",
+        "Describe permutation-based approaches for discrete data maintaining exact FDR control。",
+        "Outline the challenges in maintaining FDR control with discrete distributions and small sample sizes。"
+      ]
+    },
+    {
+      "page": 9,
+      "title": "Handling Heterogeneous Experimental Designs",
+      "key_points": [
+        "Address batch effects and platform differences in high-dimensional data analysis。",
+        "Explain hierarchical modeling approaches for heterogeneous data across conditions。",
+        "Describe adaptive procedures for varying data quality and experimental designs。"
+      ]
+    },
+    {
+      "page": 10,
+      "title": "Comparing Benjamini-Hochberg and Benjamini-Yekutieli",
+      "key_points": [
+        "Contrast the independence assumptions of BH with BY's handling of arbitrary dependence。",
+        "Evaluate computational efficiency differences between BH and BY procedures。",
+        "Discuss practical implications for genomic applications with correlated features。"
+      ]
+    },
+    {
+      "page": 11,
+      "title": "Discrete-Aware BH Variants: SU and SD",
+      "key_points": [
+        "Explain the Superiority (SU) and Superiority-Down (SD) modifications for discrete data。",
+        "Describe how these methods improve FDR control under discrete distributions。",
+        "Compare their performance characteristics with standard BH and BY procedures。"
+      ]
+    },
+    {
+      "page": 12,
+      "title": "Hierarchical and Group-Based Procedures",
+      "key_points": [
+        "Describe hierarchical testing for structured hypotheses in genomic pathways。",
+        "Explain group-based procedures for correlated features and gene sets。",
+        "Outline the integration with FDR control in hierarchical testing frameworks。"
+      ]
+    },
+    {
+      "page": 13,
+      "title": "Simulation Methodology and Reproducible R Implementation",
+      "key_points": [
+        "Detail the simulation design for comparative evaluation of error-rate control methods。",
+        "Describe the R package architecture for reproducible research and code sharing。",
+        "Specify the metrics for performance assessment including FDR, FDX, power, and FDP stability。"
+      ]
+    },
+    {
+      "page": 14,
+      "title": "Applications and Scientific Contributions",
+      "key_points": [
+        "Highlight applications in GWAS, RNA-seq, and NGS read-count data analysis。",
+        "Summarize expected contributions to statistical methodology and bioinformatics。",
+        "Outline future directions for discrete data analysis and reproducible research。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+你是PPT顾问，请根据用户需求判断这份PPT最合适的页数。
+输出必须是JSON，且只输出JSON：
+{
+  "slide_count": 8
+}
+
+规则：
+1. 页数范围必须在 4 到 20 之间。
+2. 偏简单需求建议 6-8 页，标准汇报 8-12 页，复杂复盘/方案 12-16 页。
+3. 如果用户明确提到“简短”或“快速汇报”，页数偏少。
+4. 如果用户明确提到“完整方案/年度复盘/多模块详解”，页数偏多。
+5. 不要输出解释文本。
+
+用户需求：
+Create a comprehensive academic presentation titled 'Robust and Reproducible Evaluation of Error-Rate Control in High-Dimensional Discrete and Heterogeneous Data.' The presentation must cover: (1) Research background on multiple testing challenges in high-dimensional discrete and heterogeneous data; (2) Methodological framework including False Discovery Rate (FDR), False Discovery Exceedance (FDX), discrete-aware procedures, and heterogeneous test procedures; (3) Specific procedure comparison: Benjamini-Hochberg (BH), Benjamini-Yekutieli (BY), DBH-SU, DBH-SD, HLR, and HGR; (4) Simulation methodology and reproducible R framework implementation; (5) Research phases from literature review through application and publication; (6) Application domains including genomic data, GWAS, NGS read-count data, and RNA-seq; (7) Evaluation metrics (FDR, FDX, power, FDP stability) and expected scientific contributions. Preserve the document's logical structure, maintain professional academic tone, and ensure all slide text is strictly in English. The presentation should be suitable for academic conferences, research seminars, or methodological workshops in bioinformatics and statistical methodology.

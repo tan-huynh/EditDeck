@@ -1,0 +1,12 @@
+{"step": "prepare", "message": "正在初始化模型配置...", "progress": 2, "current_slide": 0, "total_slides": 0, "done": false, "error": "", "timestamp": "2026-04-29T11:16:05Z"}
+{"step": "slide_count", "message": "正在确定PPT页数...", "progress": 8, "current_slide": 0, "total_slides": 0, "done": false, "error": "", "timestamp": "2026-04-29T11:16:05Z"}
+{"step": "slide_count", "message": "Slide count decided: 14", "progress": 15, "current_slide": 0, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:17:24Z"}
+{"step": "style", "message": "Generating style prompt...", "progress": 20, "current_slide": 0, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:17:24Z"}
+{"step": "style", "message": "Style prompt generated", "progress": 35, "current_slide": 0, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:20:54Z"}
+{"step": "outline", "message": "Generating outline...", "progress": 38, "current_slide": 0, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:20:54Z"}
+{"step": "outline", "message": "Outline generated", "progress": 50, "current_slide": 0, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:23:29Z"}
+{"step": "prompt_generation", "message": "开始生成每页完整 Prompt，线程数：4", "progress": 52, "current_slide": 0, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:23:29Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 1/14", "progress": 53, "current_slide": 1, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:25:57Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 2/14", "progress": 54, "current_slide": 2, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:27:44Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 3/14", "progress": 55, "current_slide": 3, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:31:45Z"}
+{"step": "prompt_generation", "message": "Completed prompt generation 4/14", "progress": 57, "current_slide": 4, "total_slides": 14, "done": false, "error": "", "timestamp": "2026-04-29T11:34:38Z"}

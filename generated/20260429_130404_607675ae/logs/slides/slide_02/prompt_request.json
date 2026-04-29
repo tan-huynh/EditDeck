@@ -1,0 +1,23 @@
+{
+  "provider": "openai",
+  "model": "fredrezones55/Qwopus3.5:9b",
+  "temperature": 0.1,
+  "information_density": "medium",
+  "image_attachment_present": false,
+  "messages": [
+    {
+      "role": "system",
+      "content_type": "text",
+      "content_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_02/prompt_system.txt"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text_path": "/Users/huynh/Documents/Huynh_Projects/LikeTool_Notion/vendor/EditDeck/generated/20260429_130404_607675ae/logs/slides/slide_02/prompt_user.txt"
+        }
+      ]
+    }
+  ]
+}

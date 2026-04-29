@@ -1,0 +1,284 @@
+**Visual Style System: Academic Professional Presentation**
+
+**OVERALL TEMPERAMENT & PHILOSOPHY**
+
+The presentation embodies intellectual rigor meeting corporate clarity. Every visual decision serves information transmission, not aesthetic indulgence. The aesthetic is "quiet confidence"—subtle sophistication that commands attention through precision rather than decoration. Think laboratory whiteboard meets modern consulting firm. The visual language whispers authority while remaining accessible. There is no playfulness, no whimsy, no emotional manipulation through color. The design is a vessel for complex information, not a performance.
+
+**LAYOUT SKELETON & ARCHITECTURE**
+
+The canvas operates within strict 16:9 proportions. Every slide adheres to a consistent margin system: 1.5 inches (38px) from left and right edges, 1 inch (25px) from top and bottom. This creates a "content zone" that never touches the frame. Within this zone, all elements align to a 12-column invisible grid. Column width is 80px (20px gutters). This grid is absolute—no element floats outside it.
+
+Vertical rhythm follows a 48px base unit. All vertical spacing (margins, padding, line height) is a multiple of 48px or its fractions (24px, 16px, 12px). This creates mathematical harmony across the deck.
+
+**GRID SYSTEM & WHITESPACE**
+
+The grid is the presentation's skeleton. Every card, panel, and content block aligns to these 80px columns. Gutter space between columns is 20px. Horizontal spacing between sections is 64px (1.33 units). Vertical spacing between slides in a sequence is 96px (2 units).
+
+Whitespace is active design, not empty space. Margins between text blocks are 24px. Margins between cards are 48px. Margins between section headers and content are 96px. This breathing room prevents cognitive overload. The eye travels smoothly because there are no visual obstacles—only clear pathways between information clusters.
+
+**BACKGROUND SYSTEM**
+
+Primary background: Pure white (#FFFFFF). This is non-negotiable. No off-whites, no warm whites, no textured papers.
+
+Secondary background: Very light gray (#F8F9FA) used only for:
+- Section dividers (horizontal bands)
+- Footer areas
+- Sidebars (if used)
+- Chart backgrounds (when needed for contrast)
+
+Tertiary background: Dark charcoal (#333333) reserved for:
+- Footer text
+- Small decorative elements
+- Chart axes (when necessary)
+
+No gradients. No patterns. No noise. No subtle textures. The background is a blank canvas that lets content breathe.
+
+**COLOR RELATIONSHIPS & PALETTE**
+
+**Primary Palette:**
+- White: #FFFFFF (background)
+- Accent Blue: #0066CC (primary interactive, highlights, key data points)
+- Accent Cyan: #00A8CC (secondary accent, used sparingly for variety)
+- Dark Blue: #003366 (headings, primary text)
+- Medium Blue: #004D99 (subheadings, secondary text)
+
+**Neutral Palette:**
+- Primary Text: #1A1A1A (near-black, not pure black)
+- Secondary Text: #555555 (body text, captions)
+- Tertiary Text: #888888 (labels, footnotes)
+- Border Gray: #E0E0E0 (lines, dividers)
+- Light Gray: #F0F0F0 (card backgrounds, subtle separation)
+
+**Functional Colors:**
+- Alert/Warning: #D32F2F (used only for critical data, errors, or urgent warnings)
+- Success: #388E3C (for positive indicators, completion states)
+- Neutral: #9E9E9E (for disabled states, placeholders)
+
+**Color Rules:**
+- Never use color to convey meaning alone (e.g., red = bad, green = good). Use color for emphasis, not semantics.
+- Accent blue appears in 15-20% of the slide maximum. Overuse dilutes impact.
+- Grays are for structure, not content.
+- White is for background, not for text (except in dark mode sections, which are rare).
+
+**TITLE & BODY VISUAL RELATIONSHIPS**
+
+Titles establish hierarchy through size and weight, not color. Main titles are 48px (32pt) in Dark Blue (#003366), Medium weight. Subtitles are 28px (20pt) in Medium Blue (#004D99), Regular weight. Body text is 18px (14pt) in Primary Text (#1A1A1A), Regular weight.
+
+Line height is 1.5 for body text. This creates comfortable reading rhythm. Paragraph spacing is 24px (1.5 units). Section headers have 96px (6 units) above and 48px (3 units) below them.
+
+Visual relationship between title and body is established through alignment (left-aligned or justified), not through color coding. The title sits above the content with clear vertical separation. No overlapping text. No text wrapping around images.
+
+**TYPOGRAPHY SYSTEM**
+
+Primary font: Helvetica Neue, Arial, or similar clean sans-serif. This is non-negotiable. The font must be geometric, neutral, and highly legible at small sizes.
+
+Secondary font (for quotes, long-form text, or emphasis): Georgia or similar serif. Used sparingly—maximum 10% of slides.
+
+Font weights: Regular (400), Medium (500), Bold (700). No Light, No Black. No Italic (except for emphasis in quotes).
+
+Font sizes:
+- Display: 64px (48pt) - rare, for opening slides
+- Title: 48px (36pt) - main section headers
+- Subtitle: 28px (24pt) - section subtitles
+- Heading: 24px (20pt) - content headers
+- Body: 18px (14pt) - standard text
+- Caption: 14px (12pt) - footnotes, labels
+- Small: 12px (10pt) - metadata, page numbers
+
+All text is left-aligned or justified (never centered, except for titles on opening slides). Line length is 60-70 characters maximum. This ensures readability.
+
+**CARD, PANEL & SECTION STYLES**
+
+Cards are the primary content containers. They have:
+- Background: White (#FFFFFF) or very light gray (#F8F9FA)
+- Border: 1px solid #E0E0E0 (light gray)
+- Border radius: 4px (subtle, not rounded)
+- Padding: 32px (2 units)
+- Shadow: None, or extremely subtle (0 1px 2px rgba(0,0,0,0.05))
+
+Panels (for sidebars or navigation) have:
+- Background: #F5F5F5 (light gray)
+- Border: 1px solid #E0E0E0
+- Border radius: 4px
+- Padding: 24px
+
+Sections are separated by:
+- Horizontal dividers: 2px solid #E0E0E0
+- Vertical dividers: 1px solid #E0E0E0 (for sidebars)
+- Spacing: 96px (6 units) between major sections
+
+No cards overlap. No transparency. No glassmorphism. Flat design with subtle depth.
+
+**ICON & ILLUSTRATION LANGUAGE**
+
+Icons are minimalist line drawings. Stroke width: 2px. Color: Accent Blue (#0066CC) or Dark Blue (#003366). No fills. No gradients. No 3D effects.
+
+Icon style: Outline only. No filled icons. No icon sets with different weights. All icons from the same library (e.g., Feather Icons, Heroicons, or similar).
+
+Illustrations are rare. When used:
+- Simple geometric compositions
+- Line art style matching icons
+- No photographs
+- No clip art
+- No stock photos (unless necessary for data visualization)
+- No people (unless necessary for diversity representation in case studies)
+
+Icons appear in:
+- Section headers (as decorative elements)
+- Bullet points (as list markers)
+- Diagrams (as explanatory elements)
+- Navigation (as menu items)
+
+**CHART & DATA VISUALIZATION**
+
+Charts are clean, minimal, and functional. No 3D effects. No gradients. No unnecessary decorations.
+
+Line charts: Single line in Accent Blue (#0066CC). Dashed lines for secondary data. Grid lines are light gray (#F0F0F0), 1px solid.
+
+Bar charts: Bars are solid color (Accent Blue or Dark Blue). No 3D bars. No bevels.
+
+Pie charts: Segments are solid colors from the palette. No 3D pie charts. No exploded segments unless necessary.
+
+Scatter plots: Points are small circles (4px diameter) in Accent Blue. No connecting lines unless showing trend.
+
+Data labels: Always present. Font is 12px, color #555555. No tooltips (use labels instead).
+
+Axes: Solid lines (#333333), 1px. Ticks are 2px solid. Labels are 12px, #555555.
+
+No legends unless necessary. Use color coding or direct labeling instead.
+
+**LINES, BORDERS & DIVIDERS**
+
+All borders are 1px solid. Color is #E0E0E0 (light gray) or #333333 (dark gray for emphasis).
+
+Section dividers are 2px solid #E0E0E0, spanning full width or 80% width.
+
+Corner treatments: 4px radius for cards. No sharp corners (too harsh). No rounded corners (too soft).
+
+No double borders. No dashed borders (except for specific chart elements). No dotted borders.
+
+**SHADOWS & TEXTURE**
+
+Shadows are minimal. Cards have no shadow. Panels have no shadow. Only:
+- Drop shadow for floating elements: 0 2px 4px rgba(0,0,0,0.1)
+- This is used only for navigation elements or floating callouts
+
+No texture overlays. No noise. No grain. No paper textures. No fabric textures. The surface is perfectly smooth.
+
+**LAYERS & DEPTH**
+
+Z-index hierarchy:
+1. Background (white)
+2. Cards/Panels (white or light gray)
+3. Content (text, icons, charts)
+4. Decorative elements (dividers, icons)
+
+No overlapping elements. No transparency. No blending modes. Everything sits on top of the background or inside cards.
+
+**DECORATIVE ELEMENTS**
+
+Decorations are minimal:
+- Section dividers (horizontal lines)
+- Corner accents (small triangles or dots in Accent Blue)
+- Background patterns (none)
+- Watermarks (none)
+- Clip art (none)
+
+No decorative corners. No ornamental flourishes. No background shapes.
+
+**RHYTHM & PATTERN**
+
+Visual rhythm is established through:
+- Consistent spacing (48px base)
+- Consistent alignment (left-aligned)
+- Consistent line height (1.5)
+- Consistent margin between sections (96px)
+
+No random spacing. No irregular margins. The eye moves predictably from element to element.
+
+**PAGE FLOW & NAVIGATION**
+
+Every slide has:
+- Logo in top-left or top-center (consistent placement)
+- Page number in bottom-right or bottom-center (consistent placement)
+- No navigation arrows (use slide numbers instead)
+- No progress bars (unless in specific sections)
+
+Transitions between slides: None (static). If animation is used: Fade only. No slide effects. No morph transitions.
+
+**VISUAL ANCHORS**
+
+Anchors are:
+- Logo (top-left or top-center)
+- Page numbers (bottom-right)
+- Section headers (left-aligned, 48px)
+- Cards (aligned to grid)
+
+These anchors create a sense of place and orientation. The viewer always knows where they are.
+
+**UNITY RULES**
+
+Every slide must:
+- Use the same grid
+- Use the same colors
+- Use the same fonts
+- Use the same spacing
+- Use the same border styles
+- Use the same icon style
+- Use the same chart style
+
+No exceptions. No "creative freedom" that breaks these rules.
+
+**FORBIDDEN ITEMS**
+
+Never use:
+- Clip art or stock illustrations (unless necessary for data)
+- Gradients or fills on backgrounds
+- 3D effects or shadows on text
+- Colored backgrounds for text (except Accent Blue for small highlights)
+- Mixed fonts (no mixing serif and sans-serif except for quotes)
+- Inconsistent spacing (no "eyeballing" margins)
+- Decorative borders (no double lines, no rounded corners for borders)
+- Background images or textures
+- Watermarks or logos other than the primary brand
+- Red/green for semantic meaning (use color for emphasis only)
+- Italic text (except for emphasis in quotes)
+- Underlined text (except for links)
+- All-caps for body text (use for headers only)
+
+**CONSISTENCY VS. VARIATION**
+
+**Must remain consistent:**
+- Color palette (exact hex codes)
+- Font family and weights
+- Grid system and spacing scale
+- Border styles and thickness
+- Icon style and stroke width
+- Chart appearance and data labeling
+- Card styling and padding
+- Logo placement and page numbers
+
+**Can vary (within limits):**
+- Content of charts (data, labels)
+- Specific text content (obviously)
+- Image content (if necessary for case studies)
+- Slight color variations for different sections (e.g., using #004D99 for secondary sections, but not breaking the palette)
+- Icon selection (from the same library, different icons)
+
+**CRITICAL CONSISTENCY CHECKLIST**
+
+Before finalizing any slide, verify:
+1. Is the background pure white?
+2. Are all colors from the defined palette?
+3. Is the font Helvetica/Arial or similar?
+4. Is the spacing a multiple of 48px?
+5. Are borders 1px solid #E0E0E0?
+6. Are icons from the same library?
+7. Is the logo in the same position?
+8. Are page numbers in the same position?
+
+**IMPLEMENTATION NOTES**
+
+This style system is designed for cross-page reuse. Every element is modular. You can swap content while maintaining visual integrity. The system scales from 10 slides to 1000 slides without degradation.
+
+The visual language is timeless. It will not date quickly because it relies on typography, spacing, and color theory rather than trends. It is academic in its rigor, professional in its execution, and clear in its purpose.

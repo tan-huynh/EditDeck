@@ -1,0 +1,42 @@
+A 16:9 wide screen academic presentation slide rendered in pure white (#FFFFFF) background with no texture, gradients, or noise. The layout follows a strict 48px base unit grid system. The visual style is flat, minimalist, and professional, utilizing the specific color palette: Dark Blue (#003366) for titles, Accent Blue (#0066CC) for icons and highlights, Primary Text (#1A1A1A) for body, and Border Gray (#E0E0E0) for lines.
+
+**Header Section:**
+At the top-left corner, place a small logo placeholder (text "LOGO" in 12px #888888). Centered at the top, below the logo, is the slide title "Characteristics of Discrete and Heterogeneous Data" in 48px Dark Blue (#003366) Helvetica Neue Medium weight. Below the title, add a subtitle line "Understanding Data Structure in High-Dimensional Genomics" in 24px Medium Blue (#004D99) Regular weight, left-aligned.
+
+**Main Content Area:**
+The body is divided into three distinct content cards arranged horizontally with 48px spacing between them. Each card has a white background (#FFFFFF), a 1px solid #E0E0E0 border, 4px border radius, and 32px internal padding.
+
+**Card 1 (Left):**
+- **Icon:** Top-left of the card, a minimalist line icon in Accent Blue (#0066CC) depicting a histogram with a spike at zero and a wide tail (representing zero-inflation).
+- **Heading:** "Zero-Inflated & Over-Dispersed Distributions" in 24px Dark Blue (#003366) Bold weight.
+- **Body Text:** Three lines of 18px Primary Text (#1A1A1A) with 1.5 line height: "RNA-seq and NGS read-count data frequently exhibit excess zeros and variance exceeding the mean. Standard Poisson models fail to capture this structure, requiring specialized statistical frameworks."
+- **Visual Detail:** A subtle horizontal divider line (1px #E0E0E0) separates the icon area from the text area within the card.
+
+**Card 2 (Center):**
+- **Icon:** Top-left of the card, a minimalist line icon in Accent Blue (#0066CC) depicting three overlapping layers or distinct blocks with slight offsets (representing batch effects/platforms).
+- **Heading:** "Experimental Heterogeneity" in 24px Dark Blue (#003366) Bold weight.
+- **Body Text:** Three lines of 18px Primary Text (#1A1A1A) with 1.5 line height: "Data varies across experimental conditions, sequencing platforms, and processing batches. These systematic differences introduce noise that must be distinguished from biological signal."
+- **Visual Detail:** A subtle horizontal divider line (1px #E0E0E0) separates the icon area from the text area within the card.
+
+**Card 3 (Right):**
+- **Icon:** Top-left of the card, a minimalist line icon in Accent Blue (#0066CC) depicting a grid matrix with sparse dots (representing high-dimensional discrete features).
+- **Heading:** "Computational Constraints" in 24px Dark Blue (#003366) Bold weight.
+- **Body Text:** Three lines of 18px Primary Text (#1A1A1A) with 1.5 line height: "High-dimensional settings with discrete features impose strict computational limits. Algorithms must be efficient and scalable to handle millions of features without excessive memory usage."
+- **Visual Detail:** A subtle horizontal divider line (1px #E0E0E0) separates the icon area from the text area within the card.
+
+**Decorative Elements:**
+- Between the three cards, place a vertical decorative line (1px solid #E0E0E0) extending from the top of the cards to the bottom, visually separating the columns but maintaining the grid alignment.
+- At the bottom of each card, add a small footer label in 12px #888888: "Distribution", "Heterogeneity", and "Constraints" respectively, aligned to the left of each card.
+
+**Footer Section:**
+At the bottom-right corner, place the page number "3" in 12px #888888 Helvetica Neue Regular weight. Ensure there is 96px vertical spacing between the main content cards and the footer area.
+
+**Typography & Spacing Rules:**
+- All text is left-aligned.
+- No italics are used.
+- Line length is maintained between 60-70 characters per line.
+- Margins between the title and the first card are 96px.
+- Margins between the cards are 48px.
+- All borders are 1px solid #E0E0E0.
+- No shadows are applied to the cards.
+- The overall composition feels spacious and academic, avoiding clutter while maintaining high information density.

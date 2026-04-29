@@ -1,0 +1,28 @@
+A wide-screen academic presentation slide with a pure white (#FFFFFF) background, embodying a minimalist, professional, and rigorous visual style. The layout follows a strict 80px grid system with 20px gutters. The composition is divided into a header section, a main content area with two distinct vertical columns, and a footer section.
+
+**Header Section:**
+At the top-left corner, a small, monochrome logo placeholder (abstract geometric shape) is positioned. Centered at the top, the main title "Presentation Overview and Research Scope" is displayed in a large, bold, dark blue (#003366) sans-serif font (Helvetica Neue or Arial), size 48px, medium weight. The title is left-aligned within the slide width but visually centered by the surrounding whitespace. Below the title, a thin horizontal divider line (1px solid #E0E0E0) spans 80% of the width, separating the header from the content.
+
+**Main Content Area:**
+The content is organized into two vertical columns separated by a 64px horizontal gap. Each column contains a section header and two content cards.
+
+**Left Column:**
+The section header "Research Context & Objectives" is positioned at the top of the left column, size 28px, medium blue (#004D99), regular weight, left-aligned. Below this header are two white content cards stacked vertically with 48px spacing between them.
+- **Card 1:** The card has a 1px solid #E0E0E0 border, 4px border radius, and 32px internal padding. Inside, on the left, is a minimalist line icon (2px stroke, accent blue #0066CC) depicting abstract data nodes or a network graph. To the right of the icon, the text reads: "High-Dimensional Statistics & Discrete Data" in bold dark blue (#003366), size 20px. Below this, body text in primary text color (#1A1A1A), size 18px, line height 1.5, reads: "Exploring the intersection of advanced statistical methods with discrete data analysis in modern bioinformatics."
+- **Card 2:** Identical styling to Card 1. The icon depicts a shield or checkmark symbol in accent blue (#0066CC). The text reads: "Reproducible Evaluation Frameworks" in bold dark blue (#003366), size 20px. The body text reads: "Establishing robust, reproducible frameworks for error-rate control in complex datasets."
+
+**Right Column:**
+The section header "Presentation Roadmap" is positioned at the top of the right column, matching the style of the left column header (28px, medium blue #004D99). Below this are two white content cards stacked vertically with 48px spacing.
+- **Card 3:** The icon depicts a flowchart or process diagram in accent blue (#0066CC). The text reads: "Methodology & Comparison" in bold dark blue (#003366), size 20px. The body text reads: "Detailed examination of FDR, FDX, and discrete-aware procedures including BH, BY, DBH-SU, and HLR methods."
+- **Card 4:** The icon depicts a microscope or DNA helix in accent blue (#0066CC). The text reads: "Application Domains" in bold dark blue (#003366), size 20px. The body text reads: "Coverage of genomic data, GWAS, NGS read-count data, and RNA-seq applications."
+
+**Visual Details & Styling:**
+- **Typography:** All text uses Helvetica Neue, Arial, or similar clean sans-serif fonts. No italics. Line length is kept under 60 characters for readability.
+- **Colors:** Strict adherence to the palette. Accent blue (#0066CC) is used only for icons and key highlights. Dark blue (#003366) for titles. Primary text (#1A1A1A) for body. Border gray (#E0E0E0) for lines.
+- **Spacing:** Margins between cards are 48px. Margins between the left and right columns are 64px. Vertical spacing between the header divider and the first card is 96px.
+- **Shadows:** No drop shadows on cards. The surface is perfectly smooth and matte.
+- **Icons:** All icons are outline style, 2px stroke width, no fills, no gradients, consistent with a library like Feather Icons or Heroicons.
+- **Alignment:** All text blocks are left-aligned. The cards are aligned to the grid.
+- **Footer:** At the bottom-right corner, the page number "1" is displayed in small, tertiary text color (#888888), size 12px, aligned to the right edge.
+
+The overall visual rhythm is calm and structured, with clear visual pathways guiding the eye from the title down through the two columns of information, maintaining a high level of academic professionalism and clarity.

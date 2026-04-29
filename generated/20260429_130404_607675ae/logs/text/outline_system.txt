@@ -1,0 +1,1 @@
+你生成严格 JSON 格式的 PPT 大纲。只输出 deck_title 和 slides.page/title/key_points 这几个字段。

@@ -1,0 +1,27 @@
+A single academic presentation slide with a pure white (#FFFFFF) background, flat lighting, and no shadows or textures. The layout follows a strict 48px grid system with left-aligned text and a clean, professional aesthetic.
+
+- *Header Section (Top 20% of slide):**。
+In the top-left corner, a small, minimalist logo placeholder (geometric shape, dark blue #003366). Centered horizontally below the logo is the main title "The Multiple Testing Problem in Genomics" in Helvetica/Arial Bold, 48px font size, color #003366 (Dark Blue). Directly below the title, left-aligned with the title, is the subtitle "Understanding Error Control in High-Dimensional Data" in Helvetica/Arial Regular, 28px font size, color #004D99 (Medium Blue). There is a vertical margin of 96px between the top edge and the title, and 48px between the title and subtitle.
+
+- *Main Content Section (Middle 60% of slide):**。
+Below the subtitle, three distinct content cards are arranged horizontally across the width of the slide, separated by 48px horizontal margins. Each card has a white background (#FFFFFF), a 1px solid border in #E0E0E0 (light gray), and a 4px border radius. Inside each card, the content is left-aligned with 32px padding.
+
+- *Card 1 (Left):**。
+At the top-left of the card is a minimalist line icon (outline style, 2px stroke width) in Accent Blue (#0066CC), depicting a warning clock or prohibition symbol. Below the icon is the heading "Bonferroni Correction Limitations" in Helvetica/Arial Medium, 24px font size, color #003366. Below the heading is the body text: "Conservative for large-scale testing. Over-controls family-wise error rates, reducing power significantly in genomic applications." in Helvetica/Arial Regular, 18px font size, color #1A1A1A (Primary Text), with a line height of 1.5.
+
+- *Card 2 (Center):**。
+At the top-left is a minimalist line icon (outline style, 2px stroke width) in Accent Blue (#0066CC), depicting a checkmark or upward graph. Below the icon is the heading "False Discovery Rate (FDR) Control" in Helvetica/Arial Medium, 24px font size, color #003366. Below the heading is the body text: "Preferred for high-dimensional data. Balances error control with statistical power, allowing more true discoveries while maintaining reproducibility." in Helvetica/Arial Regular, 18px font size, color #1A1A1A, with a line height of 1.5.
+
+- *Card 3 (Right):**。
+At the top-left is a minimalist line icon (outline style, 2px stroke width) in Accent Blue (#0066CC), depicting data points or a warning triangle. Below the icon is the heading "Challenges with Discrete Data" in Helvetica/Arial Medium, 24px font size, color #003366. Below the heading is the body text: "Integer-valued distributions (Poisson, Negative Binomial). Standard continuous assumptions fail; requires discrete-aware procedures." in Helvetica/Arial Regular, 18px font size, color #1A1A1A, with a line height of 1.5.
+
+- *Footer Section (Bottom 10% of slide):**。
+In the bottom-right corner, the page number "4" is displayed in Helvetica/Arial Regular, 12px font size, color #333333 (Dark Charcoal). There is a vertical margin of 48px between the bottom of the main content cards and the footer.
+
+- *Visual Details:**。
+All text is left-aligned. There are no gradients, no patterns, and no decorative elements other than the specified icons and borders. The color palette is strictly limited to the defined hex codes: #FFFFFF (background), #003366 (titles), #004D99 (subtitles), #0066CC (accent/icons), #1A1A1A (body text), #E0E0E0 (borders). The overall composition is balanced, with ample whitespace (48px margins) between the cards to prevent cognitive overload. The visual flow guides the eye from the title down to the three key points in a left-to-right reading order.
+
+信息密度控制：
+- 本页属于中等信息密度页面，建议承载 3-5 个主要信息单元。
+- 在信息完整度和留白之间保持平衡，适合一主多辅或多分区但不过载的结构。
+- 模块数量适中，既要体现内容层次，也要保留足够呼吸感，避免堆砌成高密度看板。
