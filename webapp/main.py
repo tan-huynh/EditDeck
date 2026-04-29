@@ -6,7 +6,7 @@ import json
 import re
 from datetime import datetime
 from pathlib import Path
-from threading import Lock, Thread
+from threading import Event, Lock, Thread
 from typing import Any, Callable, Optional, Sequence
 from uuid import uuid4
 
@@ -183,6 +183,34 @@ def _scaled_progress_callback(
     return wrapped
 
 
+def _start_heartbeat(
+    job_id: str,
+    *,
+    step: str,
+    message: str,
+    start_progress: int,
+    max_progress: int,
+    interval_seconds: float = 2.0,
+) -> Event:
+    stop_event = Event()
+
+    def run() -> None:
+        tick = 0
+        while not stop_event.wait(interval_seconds):
+            tick += 1
+            progress = min(max_progress, start_progress + tick)
+            _update_job(
+                job_id,
+                state="running",
+                step=step,
+                message=message,
+                progress=progress,
+            )
+
+    Thread(target=run, daemon=True).start()
+    return stop_event
+
+
 def _resolve_run_dir(run_id: str) -> Path:
     run_dir = (Path(settings.output_root) / run_id).resolve()
     root_dir = Path(settings.output_root).resolve()
@@ -326,11 +354,40 @@ def _run_generation_job(
         )
 
     try:
-        prepared_requirement = source_processor.prepare_requirement(
-            user_requirement=user_requirement,
-            source_files=source_files,
-            runtime_cfg=source_runtime_cfg,
-            run_dir=run_dir,
+        source_count = len(source_files or [])
+        prepare_heartbeat = None
+        try:
+            if source_count:
+                _update_job(
+                    job_id,
+                    state="running",
+                    step="source_ingest",
+                    message=f"Extracting and condensing {source_count} source file(s)...",
+                    progress=2,
+                )
+                prepare_heartbeat = _start_heartbeat(
+                    job_id,
+                    step="source_ingest",
+                    message=f"Extracting and condensing {source_count} source file(s)...",
+                    start_progress=2,
+                    max_progress=12,
+                    interval_seconds=2.0,
+                )
+            prepared_requirement = source_processor.prepare_requirement(
+                user_requirement=user_requirement,
+                source_files=source_files,
+                runtime_cfg=source_runtime_cfg,
+                run_dir=run_dir,
+            )
+        finally:
+            if prepare_heartbeat is not None:
+                prepare_heartbeat.set()
+        _update_job(
+            job_id,
+            state="running",
+            step="source_ingest",
+            message="Document context prepared.",
+            progress=12 if source_count else 2,
         )
         generation_progress = on_progress
         editable_progress = on_progress
