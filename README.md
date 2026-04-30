@@ -1,4 +1,4 @@
-# EditDeck
+# EditDeck 
 
 <p align="center">An end-to-end pipeline from requirement text to slide images, standard PPTX, and editable PPTX.</p>
 
